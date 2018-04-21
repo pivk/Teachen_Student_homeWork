@@ -1,0 +1,26 @@
+@CHARSET "UTF-8";
+
+@page {
+	size: 236mm 201mm;
+	margin: 10mm 10mm 10mm 10mm;
+}
+
+body {
+	color: #000;
+	background: #fff;
+	height: auto;
+	width: auto;
+}
+
+img {
+	width: 100%;
+}
+
+.Print {
+	width: auto;
+	height: auto;
+	overflow: auto;
+}
+.PageBreak {
+	page-break-after: always;
+}

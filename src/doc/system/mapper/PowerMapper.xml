@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="doc.system.mapper.PowerMapper">
+	<resultMap id="EntityResult" type="doc.system.entity.Power">
+		<id column="ID" jdbcType="VARCHAR" property="id" />
+		<result column="MingCheng" jdbcType="VARCHAR" property="mingCheng" />
+		<result column="Link" jdbcType="VARCHAR" property="link" />
+		<result column="Leaf" jdbcType="VARCHAR" property="leaf" />
+		<result column="Icon" jdbcType="VARCHAR" property="icon" />
+	</resultMap>
+	<resultMap id="ViewResult" type="doc.system.view.PowerV" extends="EntityResult">
+		<result column="RoleID" jdbcType="VARCHAR" property="roleId" />
+		<result column="UserID" jdbcType="VARCHAR" property="userId" />
+	</resultMap>	
+	<!-- 查询 -->
+	<select id="selectAll" parameterType="java.util.Map" resultMap="ViewResult">
+		select
+		*
+		from Sys_Power
+		where 1=1
+	</select>
+	<select id="selectRolePower" parameterType="java.lang.String"
+		resultMap="ViewResult">
+		select
+		PowerID as ID,RoleID
+		from Sys_Role_Power
+		where
+		RoleID=#{roleId,jdbcType=VARCHAR}
+	</select>
+	<select id="selectUserPower" parameterType="java.lang.String"
+		resultMap="ViewResult">
+		select
+		*
+		from VUserPower
+		where
+		UserID=#{userId,jdbcType=VARCHAR}
+	</select>
+	<insert id="insertRolePower" parameterType="doc.system.entity.RolePower">
+		insert into Sys_Role_Power(RoleID,PowerID) VALUES(#{roleId,jdbcType=VARCHAR},#{powerId,jdbcType=VARCHAR})			
+	</insert>
+	<update id="deleteRolePower" parameterType="java.lang.String">
+		delete from
+		Sys_Role_Power where RoleID = #{roleId,jdbcType=VARCHAR};
+	</update>
+</mapper>

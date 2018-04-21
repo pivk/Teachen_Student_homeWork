@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="doc.system.mapper.LogMapper">
+	<resultMap id="BaseResultMap" type="doc.system.view.LogV">
+		<id column="ID" jdbcType="VARCHAR" property="id" />
+		<result column="BiaoTi" jdbcType="VARCHAR" property="biaoTi" />
+		<result column="NeiRong" jdbcType="VARCHAR" property="neiRong" />
+		<result column="ShiJian" jdbcType="TIMESTAMP" property="date" />
+		<result column="UserId" jdbcType="VARCHAR" property="userId" />
+	</resultMap>
+	<select id="selectAll" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		*
+		from Sys_Log
+		where 1=1
+		<if test="biaoTi != null">
+			AND BiaoTi like #{biaoTi,jdbcType=VARCHAR}
+		</if>
+		<if test="date != null">
+			AND ShiJian = #{date,jdbcType=VARCHAR}
+		</if>
+		<if test="userId != null">
+			AND UserId = #{userId,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<select id="selectCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select
+		count(*) as shu
+		from Sys_Log
+		where 1=1
+		<if test="biaoTi != null">
+			AND BiaoTi like #{biaoTi,jdbcType=VARCHAR}
+		</if>
+		<if test="date != null">
+			AND ShiJian = #{date,jdbcType=VARCHAR}
+		</if>
+		<if test="userId != null">
+			AND UserId = #{userId,jdbcType=VARCHAR}
+		</if>
+	</select>		
+	<!-- 分页查询 -->
+	<select id="selectPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		L.ID,BiaoTi, NeiRong , ShiJian, U.XingMing AS XMing
+		
+		from cr_log L left Join cr_user U on L.UserId=U.ID
+		where 1=1		
+		<if test="biaoTi != null">
+			AND BiaoTi like #{biaoTi,jdbcType=VARCHAR}
+		</if>
+		<if test="date != null">
+			AND ShiJian = #{date,jdbcType=VARCHAR}
+		</if>
+		<if test="userId != null">
+			AND UserId = #{userId,jdbcType=VARCHAR}
+		</if>
+		limit #{begin}, #{PageSize}
+	</select>
+	<insert id="insert" parameterType="doc.system.entity.Log">
+		insert into Sys_Log
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="biaoTi != null">
+				BiaoTi,
+			</if>
+			<if test="neiRong != null">
+				NeiRong,
+			</if>
+			<if test="userId != null">
+				UserId,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="biaoTi != null">
+				#{biaoTi,jdbcType=VARCHAR},
+			</if>
+			<if test="neiRong != null">
+				#{neiRong,jdbcType=VARCHAR},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+</mapper>

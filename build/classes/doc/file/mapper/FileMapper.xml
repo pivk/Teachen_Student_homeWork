@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="doc.file.mapper.FileMapper">
+	<resultMap id="EntityResultMap" type="doc.file.entity.File">
+		<id column="ID" jdbcType="VARCHAR" property="id" />
+		<result column="MINGCHENG" jdbcType="VARCHAR" property="mingCheng" />
+	</resultMap>
+	<resultMap id="ViewResult" type="doc.file.view.FileV"
+		extends="EntityResultMap">
+	</resultMap>
+	<select id="selectCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(*) as shu
+		from doc_File
+		where 1=1
+		<if test="id != null">
+			AND ID = #{id,jdbcType=VARCHAR}
+		</if>
+		<if test="mingCheng != null">
+			AND MingCheng like #{mingCheng,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<!-- 分页查询 -->
+	<select id="selectPage" parameterType="java.util.Map" resultMap="ViewResult">
+		SELECT T.*,F.GESHI from doc_File F
+		LEFT JOIN doc_tree T ON F.ID=T.ID
+		WHERE 1=1
+		<if test="id != null">
+			AND T.id = #{id,jdbcType=VARCHAR}
+		</if>
+		<if test="mingCheng != null">
+			AND T.mingcheng like #{mingCheng,jdbcType=VARCHAR}
+		</if>
+		limit #{begin}, #{PageSize}
+	</select>
+	<!-- 查询单个 -->
+	<select id="get" parameterType="java.lang.String" resultMap="EntityResultMap">
+		SELECT T.*,F.GESHI from doc_File F
+		LEFT JOIN doc_tree T ON F.ID=T.ID
+		where T.id = #{id,jdbcType=VARCHAR}
+	</select>
+	<select id="show" parameterType="java.lang.String" resultMap="ViewResult">
+		SELECT T.*,F.GESHI from doc_File F
+		LEFT JOIN doc_tree T ON F.ID=T.ID
+		where T.id = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="delete" parameterType="java.lang.String">
+		delete from doc_File
+		where
+		id=#{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="doc.file.entity.File">
+		insert into doc_File
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="mingCheng != null">
+				MingCheng,
+			</if>
+			<if test="geShi != null">
+				geShi,
+			</if>			
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="mingCheng != null">
+				#{mingCheng,jdbcType=VARCHAR},
+			</if>
+			<if test="geShi != null">
+				#{geShi,jdbcType=VARCHAR},
+			</if>			
+		</trim>
+	</insert>
+	<update id="update" parameterType="doc.file.entity.File">
+		update doc_File
+		<set>
+			<if test="mingCheng != null">
+				MingCHeng = #{mingCheng,jdbcType=VARCHAR},
+			</if>
+			<if test="geShi != null">
+				geShi = #{mingCheng,jdbcType=VARCHAR},
+			</if>			
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+</mapper>

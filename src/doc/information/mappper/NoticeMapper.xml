@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="oa.information.mapper.NoticeMapper">
+	<resultMap id="EntityResult" type="oa.information.entity.Notice">
+		<id column="ID" jdbcType="VARCHAR" property="id" />
+		<result column="BIAOTI" jdbcType="VARCHAR" property="biaoTi" />
+		<result column="NEIRONG" jdbcType="CLOB" property="neiRong" />
+		<result column="FUJIAN" jdbcType="VARCHAR" property="fuJian" />
+		<result column="FUJIANNAME" jdbcType="VARCHAR" property="fuJianName" />
+		<result column="CREATETIME" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="CREATOR" jdbcType="VARCHAR" property="creator" />
+	</resultMap>
+	
+	<resultMap id="ViewResult" type="oa.information.view.NoticeV">
+		<id column="ID" jdbcType="VARCHAR" property="id" />
+		<result column="BIAOTI" jdbcType="VARCHAR" property="biaoTi" />
+		<result column="NEIRONG" jdbcType="CLOB" property="neiRong" />
+		<result column="FUJIAN" jdbcType="VARCHAR" property="fuJian" />
+		<result column="FUJIANNAME" jdbcType="VARCHAR" property="fuJianName" />
+		<result column="CREATETIME" jdbcType="TIMESTAMP" property="createTime" />
+		<result column="CREATOR" jdbcType="VARCHAR" property="creator" />
+		<result column="NOTICE_ID" jdbcType="VARCHAR" property="noticeId" />
+		<result column="USER_ID" jdbcType="VARCHAR" property="userId" />
+		<result column="DU" jdbcType="VARCHAR" property="du" />
+		<result column="DUTIME" jdbcType="TIMESTAMP" property="duTime" />
+	</resultMap>
+	
+	<sql id="Base_Column_List">
+		ID, BIAOTI,NEIRONG,FUJIAN,FUJIANNAME,CREATETIME,CREATOR
+	</sql>
+	<select id="selectCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(*) as shu from OA_NOTICE where 1=1
+		<if test="biaoTi != null">
+			AND BIAOTI like #{biaoTi,jdbcType=VARCHAR}
+		</if>
+		<if test="id_not_in!= null">
+			AND ID NOT IN(${id_not_in})
+		</if>
+	</select>
+		<!-- 分页查询通知 -->
+	<select id="selectPageNoticeV" parameterType="java.util.Map" resultMap="ViewResult">
+		SELECT * FROM OA_NOTICE_USER NOUSER LEFT JOIN OA_NOTICE NOI ON NOUSER.NOTICE_ID=NOI."ID" WHERE 1=1
+		<if test="biaoTi != null">
+			AND BIAOTI like #{biaoTi,jdbcType=VARCHAR}
+		</if>
+		AND NOUSER.USER_ID=#{userId,jdbcType=VARCHAR}
+	</select>
+		<!--查询通知总数 -->
+	<select id="selectPageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(*) as shu FROM OA_NOTICE_USER NOUSER LEFT JOIN OA_NOTICE NOI ON NOUSER.NOTICE_ID=NOI."ID" WHERE 1=1 
+		<if test="biaoti != null">
+			AND BIAOTI like #{biaoti,jdbcType=VARCHAR}
+		</if>
+		AND NOUSER.USER_ID=#{userId,jdbcType=VARCHAR}
+		
+	</select>
+	<!-- 分页查询 -->
+	<select id="selectPage" parameterType="java.util.Map" resultMap="ViewResult">
+		SELECT *
+		FROM (SELECT ROWNUM AS rowno, M.* FROM (
+				SELECT * FROM OA_NOTICE 
+				WHERE 1=1
+				<if test="biaoti != null">
+					AND BIAOTI like #{biaoti,jdbcType=VARCHAR}
+				</if>
+				<if test="id_not_in!= null">
+					AND ID NOT IN(${id_not_in})
+				</if>
+		        ORDER BY CREATETIME DESC
+			) M
+			WHERE ROWNUM &lt;= #{end}
+		) A
+		WHERE A.rowno &gt;= #{begin}+1
+	</select>
+	<select id="selectAllNotice" parameterType="java.util.Map" resultMap="ViewResult">
+			SELECT *
+		FROM (SELECT ROWNUM AS rowno, M.* FROM (
+				SELECT * FROM OA_NOTICE 
+				WHERE 1=1
+		        ORDER BY CREATETIME DESC
+			) M
+			WHERE ROWNUM &lt;= #{end}
+		) A
+		WHERE A.rowno &gt;= #{begin}+1
+	</select>
+	<!-- 查询单个 -->
+	<select id="get" parameterType="java.lang.String" resultMap="EntityResult">
+		select
+		<include refid="Base_Column_List" />
+		from OA_NOTICE
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<!-- 单个详情 -->
+	<select id="show" parameterType="java.lang.String" resultMap="ViewResult">
+		select * from OA_NOTICE N where N.ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<!-- 删除 -->
+	<delete id="delete" parameterType="java.lang.String">
+		delete from OA_NOTICE
+		where ID =
+		#{id,jdbcType=VARCHAR}
+	</delete>
+	<delete id="deleteNoticeUser" parameterType="java.lang.String">
+		delete from OA_NOTICE_USER
+		where NOTICE_ID =
+		#{id,jdbcType=VARCHAR}
+	</delete>
+	<!-- 添加 -->
+	<insert id="insert" parameterType="oa.information.entity.Notice">
+		insert into OA_NOTICE
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="biaoTi != null">
+				BIAOTI,
+			</if>
+			<if test="neiRong != null">
+				NEIRONG,
+			</if>
+			<if test="fuJian != null">
+				FUJIAN,
+			</if>
+			<if test="fuJianName != null">
+				FUJIANNAME,
+			</if>
+			<if test="createTime != null">
+				CREATETIME,
+			</if>
+			<if test="creator != null">
+				CREATOR,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="biaoTi != null">
+				#{biaoTi,jdbcType=VARCHAR},
+			</if>
+			<if test="neiRong != null">
+				#{neiRong,jdbcType=CLOB},
+			</if>
+			<if test="fuJian != null">
+				#{fuJian,jdbcType=VARCHAR},
+			</if>
+			<if test="fuJianName != null">
+				#{fuJianName,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				#{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="creator != null">
+				#{creator,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert> 
+	
+	
+	<!-- 添加 user通知 -->
+	<insert id="insertNotice" parameterType="oa.information.view.NoticeV">
+		insert into OA_NOTICE_USER
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="noticeId != null">
+				NOTICE_ID,
+			</if>
+			<if test="userId != null">
+				USER_ID,
+			</if>
+			<if test="du != null">
+				DU,
+			</if>
+			<if test="duTime != null">
+				DUTIME,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="noticeId != null">
+				#{noticeId,jdbcType=VARCHAR},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=VARCHAR},
+			</if>
+			<if test="du != null">
+				#{du,jdbcType=CLOB},
+			</if>
+			<if test="duTime != null">
+				#{duTime,jdbcType=TIMESTAMP},
+			</if>
+		</trim>
+	</insert> 
+	
+	<!-- 修改信息 -->
+	<update id="update" parameterType="oa.information.entity.Notice">
+		update OA_NOTICE
+		<set>
+			<if test="biaoTi != null">
+				BIAOTI = #{biaoTi,jdbcType=VARCHAR},
+			</if>
+			<if test="neiRong != null">
+				NEIRONG = #{neiRong,jdbcType=VARCHAR},
+			</if>
+			<if test="fuJian != null">
+				FUJIAN = #{fuJian,jdbcType=VARCHAR},
+			</if>
+			<if test="fuJianName != null">
+				FUJIANNAME = #{fuJianName,jdbcType=VARCHAR},
+			</if>
+			<if test="createTime != null">
+				CREATETIME = #{createTime,jdbcType=TIMESTAMP},
+			</if>
+			<if test="creator != null">
+				CREATOR = #{creator,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<!-- 修改信息 -->
+	<update id="updateNotiveV" parameterType="oa.information.view.NoticeV">
+		update OA_NOTICE_USER
+		<set>
+			DUTIME = SYSTIMESTAMP,
+			<if test="du != null">
+				DU = #{du,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where NOTICE_ID = #{noticeId,jdbcType=VARCHAR}
+	</update>
+</mapper>

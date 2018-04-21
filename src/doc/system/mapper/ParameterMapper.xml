@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="doc.system.mapper.ParameterMapper">
+	<resultMap id="BaseResultMap" type="doc.system.entity.Parameter">
+		<id column="ID" jdbcType="VARCHAR" property="id" />
+		<result column="Lei" jdbcType="VARCHAR" property="lei" />
+		<result column="Jian" jdbcType="VARCHAR" property="jian" />
+		<result column="Zhi" jdbcType="VARCHAR" property="zhi" />
+		<result column="Xu" jdbcType="INTEGER" property="xu" />
+	</resultMap>
+	<resultMap id="ViewResult" type="doc.system.view.ParameterV"
+		extends="BaseResultMap">
+		<id column="ID" jdbcType="VARCHAR" property="id" />
+		<result column="Lei" jdbcType="VARCHAR" property="lei" />
+		<result column="Jian" jdbcType="VARCHAR" property="jian" />
+		<result column="Zhi" jdbcType="VARCHAR" property="zhi" />
+		<result column="Xu" jdbcType="INTEGER" property="xu" />
+	</resultMap>	
+	<select id="selectCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select
+		count(*) as shu
+		from Sys_Parameter
+		where 1=1
+		<if test="id != null">
+			AND ID = #{id,jdbcType=VARCHAR}
+		</if>
+		<if test="lei != null">
+			AND Lei like #{lei,jdbcType=VARCHAR}
+		</if>
+		<if test="jian != null">
+			AND Jian = #{jian,jdbcType=VARCHAR}
+		</if>
+		<if test="zhi != null">
+			AND Zhi = #{zhi,jdbcType=VARCHAR}
+		</if>
+		<if test="xu != null">
+			AND Xu = #{xu,jdbcType=INTEGER}
+		</if>
+	</select>	
+	<!-- 查询 -->
+	<select id="selectAll" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		*
+		from Sys_Parameter
+		where 1=1
+		<if test="id != null">
+			AND ID = #{id,jdbcType=VARCHAR}
+		</if>
+		<if test="lei != null">
+			AND Lei like #{lei,jdbcType=VARCHAR}
+		</if>
+		<if test="jian != null">
+			AND Jian = #{jian,jdbcType=VARCHAR}
+		</if>
+		<if test="zhi != null">
+			AND Zhi = #{zhi,jdbcType=VARCHAR}
+		</if>
+		<if test="xu != null">
+			AND Xu = #{xu,jdbcType=INTEGER}
+		</if>
+		GROUP BY Lei
+	</select>
+	<!-- 查询 -->
+	<select id="selectAllSheng" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		*
+		from Sys_Parameter
+		where 1=1
+		<if test="lei != null">
+			AND Lei = #{lei,jdbcType=VARCHAR}
+		</if>
+		<if test="jian != null">
+			AND Jian like #{jian,jdbcType=VARCHAR}
+		</if>
+	</select>		
+	<!-- 分页查询 -->
+	<select id="selectPage" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		*
+		from Sys_Parameter
+		where 1=1
+		<if test="id != null">
+			AND ID = #{id,jdbcType=VARCHAR}
+		</if>
+		<if test="lei != null">
+			AND Lei like #{lei,jdbcType=VARCHAR}
+		</if>
+		<if test="jian != null">
+			AND Jian = #{jian,jdbcType=VARCHAR}
+		</if>
+		<if test="zhi != null">
+			AND Zhi = #{zhi,jdbcType=VARCHAR}
+		</if>
+		<if test="xu != null">
+			AND Xu = #{xu,jdbcType=INTEGER}
+		</if>
+		limit #{begin}, #{PageSize}
+	</select>
+	<!-- 查询单个 -->
+	<select id="get" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		*
+		from Sys_Parameter
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<select id="show" parameterType="java.lang.String" resultMap="ViewResult">
+		select
+		*
+		from Sys_Parameter
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>	
+	<delete id="delete" parameterType="java.lang.String">
+		delete from Sys_Parameter
+		where ID =
+		#{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="doc.system.entity.Parameter">
+		insert into Sys_Parameter
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="lei != null">
+				Lei,
+			</if>
+			<if test="jian != null">
+				Jian,
+			</if>
+			<if test="zhi != null">
+				Zhi,
+			</if>
+			<if test="xu != null">
+				Xu,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="lei != null">
+				#{lei,jdbcType=VARCHAR},
+			</if>
+			<if test="jian != null">
+				#{jian,jdbcType=VARCHAR},
+			</if>
+			<if test="zhi != null">
+				#{zhi,jdbcType=VARCHAR},
+			</if>
+			<if test="xu != null">
+				#{xu,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="update" parameterType="doc.system.entity.Parameter">
+		update Sys_Parameter
+		<set>
+			<if test="lei != null">
+				Lei = #{lei,jdbcType=VARCHAR},
+			</if>			
+			<if test="jian != null">
+				Jian = #{jian,jdbcType=VARCHAR},
+			</if>
+			<if test="zhi != null">
+				Zhi = #{zhi,jdbcType=VARCHAR},
+			</if>
+			<if test="xu != null">
+				Xu = #{xu,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+</mapper>

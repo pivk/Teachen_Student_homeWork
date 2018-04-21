@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="doc.system.mapper.UserMapper">
+	<resultMap id="EntityResult" type="doc.system.entity.User">
+		<id column="ID" jdbcType="VARCHAR" property="id" />
+		<result column="MiMa" jdbcType="VARCHAR" property="mima" />
+		<result column="Code" jdbcType="VARCHAR" property="code" />
+		<result column="XingMing" jdbcType="VARCHAR" property="xingMing" />
+		<result column="Mobile" jdbcType="VARCHAR" property="mobile" />
+		<result column="Email" jdbcType="VARCHAR" property="email" />
+		<result column="Status" jdbcType="VARCHAR" property="status" />
+		<result column="UnitID" jdbcType="VARCHAR" property="unitId" />
+		<result column="Nei" jdbcType="CHAR" property="nei" />
+		<result column="skin" jdbcType="VARCHAR" property="skin" />
+	</resultMap>
+	<resultMap id="ViewResult" type="doc.system.view.UserV">
+		<id column="ID" jdbcType="VARCHAR" property="id" />
+		<result column="MiMa" jdbcType="VARCHAR" property="mima" />
+		<result column="Code" jdbcType="VARCHAR" property="code" />
+		<result column="XingMing" jdbcType="VARCHAR" property="xingMing" />
+		<result column="Mobile" jdbcType="VARCHAR" property="mobile" />
+		<result column="Email" jdbcType="VARCHAR" property="email" />
+		<result column="Status" jdbcType="VARCHAR" property="status" />
+		<result column="UnitID" jdbcType="VARCHAR" property="unitId" />
+		<result column="UnitName" jdbcType="VARCHAR" property="unitName" />
+		<result column="Nei" jdbcType="CHAR" property="nei" />
+	</resultMap>	
+	<resultMap id="BaseRoleResultMap" type="doc.system.view.UserV">
+		<id column="ID" jdbcType="VARCHAR" property="id" />
+		<id column="XingMing" jdbcType="VARCHAR" property="xingMing" />
+		<collection property="roles" ofType="doc.system.entity.Role">
+			<id property="id" column="CR_Role.ID" jdbcType="VARCHAR"/>
+			<result property="mingCheng" column="MingCheng" jdbcType="VARCHAR"/>
+		</collection>
+	</resultMap>
+	<sql id="Base_Column_List">
+		ID, XingMing, Mobile, Email, Code, Status, UnitID,Skin
+	</sql>
+	<select id="selectCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select
+		count(*) as shu
+		from OA_USER
+		where 1=1
+		<if test="unitId != null">
+			AND UnitID = #{unitId,jdbcType=VARCHAR}
+		</if>
+		<if test="xingMing != null">
+			AND XingMing like #{xingMing,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null">
+			AND Status = #{status,jdbcType=VARCHAR}
+		</if>
+		<if test="id_not_in!= null">
+			AND ID NOT IN(${id_not_in})
+		</if>
+	</select>	
+	<!-- 查询 -->
+	<select id="selectAll" parameterType="java.util.Map" resultMap="ViewResult">
+		select
+		U.ID, XingMing, Mobile, Email, U.Code, Status, UnitID,UT.MingCheng AS UnitName
+		from OA_USER U
+		left join CR_Unit UT on U.UnitID=UT.ID
+		where 1=1
+		<if test="id != null">
+			AND U.ID = #{id,jdbcType=VARCHAR}
+		</if>
+		<if test="id_not_in!= null">
+			AND U.ID NOT IN(${id_not_in})
+		</if>
+	</select>	
+	<!-- 分页查询 -->
+	<select id="selectPage" parameterType="java.util.Map" resultMap="ViewResult">
+		select
+		U.ID, XingMing, Mobile, Email, U.Code, Status, UnitID,UT.MingCheng AS UnitName
+		from OA_USER U
+		left join CR_Unit UT on U.UnitID=UT.ID
+		where 1=1
+		<if test="unitId != null">
+			AND UnitID = #{unitId,jdbcType=VARCHAR}
+		</if>
+		<if test="xingMing != null">
+			AND XingMing like #{xingMing,jdbcType=VARCHAR}
+		</if>
+		<if test="status != null">
+			AND Status = #{status,jdbcType=VARCHAR}
+		</if>
+		<if test="id_not_in!= null">
+			AND U.ID NOT IN(${id_not_in})
+		</if>
+		limit #{begin}, #{PageSize}
+	</select>
+	<!-- 查询单个 -->
+	<select id="get" parameterType="java.lang.String" resultMap="EntityResult">
+		select
+		<include refid="Base_Column_List" />
+		from OA_USER
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<select id="show" parameterType="java.lang.String" resultMap="ViewResult">
+		select
+		U.ID, XingMing, Mobile, Email, U.Code, Status, UnitID,UT.MingCheng AS UnitName
+		from OA_USER U
+		left join CR_Unit UT on U.UnitID=UT.ID
+		where U.ID = #{id,jdbcType=VARCHAR}
+	</select>	
+	<delete id="delete" parameterType="java.lang.String">
+		delete from OA_USER
+		where ID =
+		#{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="doc.system.entity.User">
+		insert into OA_USER
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="mima != null">
+				MiMa,
+			</if>
+			<if test="code != null">
+				Code,
+			</if>
+			<if test="xingMing != null">
+				XingMing,
+			</if>
+			<if test="mobile != null">
+				Mobile,
+			</if>
+			<if test="email != null">
+				Email,
+			</if>
+			<if test="status != null">
+				Status,
+			</if>
+			<if test="unitId != null">
+				UnitID,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="mima != null">
+				#{mima,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="xingMing != null">
+				#{xingMing,jdbcType=VARCHAR},
+			</if>
+			<if test="mobile != null">
+				#{mobile,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				#{email,jdbcType=VARCHAR},
+			</if>
+			<if test="status != null">
+				#{status,jdbcType=VARCHAR},
+			</if>
+			<if test="unitId != null">
+				#{unitId,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="update" parameterType="doc.system.entity.User">
+		update OA_USER
+		<set>
+			<if test="xingMing != null">
+				XingMing = #{xingMing,jdbcType=VARCHAR},
+			</if>
+			<if test="unitId != null">
+				UnitID = #{unitId,jdbcType=VARCHAR},
+			</if>			
+			<if test="mobile != null">
+				Mobile = #{mobile,jdbcType=VARCHAR},
+			</if>
+			<if test="email != null">
+				Email = #{email,jdbcType=VARCHAR},
+			</if>
+			<if test="skin != null">
+				Skin = #{skin,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<update id="updateMima" parameterType="doc.system.entity.User">
+		update OA_USER
+		<set>
+			<if test="mima != null">
+				MiMA = #{mima,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	<!-- 查询角色 -->
+	<select id="getUserRole" parameterType="java.lang.String" resultMap="BaseRoleResultMap">
+		select cu.ID,cu.XingMing,cr.ID as 'CR_Role.ID',cr.MingCheng from OA_USER cu inner join CR_User_Role cur on cu.ID = cur.UserID inner join CR_Role cr on cur.RoleID = cr.ID where cu.ID = #{id,jdbcType=VARCHAR};
+	</select>
+	<delete id="emptyUserRole" parameterType="java.lang.String">
+		delete from CR_User_Role where UserID = #{id,jdbcType=VARCHAR};
+	</delete>
+	<insert id="changeUserRole" parameterType="java.util.Map">
+		insert into CR_User_Role (UserID,RoleID) values (#{uId,jdbcType=VARCHAR},#{rId,jdbcType=VARCHAR});
+	</insert>
+	<select id="login" parameterType="java.util.Map" resultMap="EntityResult">
+		select
+		ID,Code,XingMing,UnitID,Skin
+		from OA_USER
+		where ID = #{id,jdbcType=VARCHAR} AND MiMa = #{mima,jdbcType=VARCHAR}
+	</select>	
+</mapper>

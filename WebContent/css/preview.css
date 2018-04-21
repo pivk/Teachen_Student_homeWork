@@ -1,0 +1,26 @@
+@CHARSET "UTF-8";
+
+.UnderLine {
+	display:-moz-inline-box;
+	display:inline-block;
+	border-bottom:1px solid #333;
+}
+.Title{
+	font-weight: bold; 
+	text-align: center;
+	font-size:20pt;
+	margin:0px 0px 10px 0px;
+}
+.Item{
+
+}
+.ItemLabel{
+	font-weight: bold; 
+}
+.Card{
+	margin: 10px 0 0 10px; 
+	width: 201mm; 
+	border-style: solid; 
+	border-width: 1px;
+	padding:10px 10px 10px 10px
+}

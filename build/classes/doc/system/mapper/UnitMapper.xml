@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="doc.system.mapper.UnitMapper">
+	<resultMap id="BaseResultMap" type="doc.system.entity.Unit">
+		<id column="ID" jdbcType="VARCHAR" property="id" />
+		<result column="MingCheng" jdbcType="VARCHAR" property="mingCheng" />
+		<result column="Code" jdbcType="VARCHAR" property="code" />
+		<result column="ParentID" jdbcType="VARCHAR" property="parentId" />
+	</resultMap>
+	<resultMap id="ViewResult" type="doc.system.view.UnitV" extends="BaseResultMap">
+		<result column="ParentName" jdbcType="VARCHAR" property="parentName" />
+	</resultMap>
+	<select id="selectCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select
+		count(*) as shu
+		from Sys_Unit
+		where 1=1		
+		<if test="id != null">
+			AND ID = #{id,jdbcType=VARCHAR}
+		</if>
+		<if test="mingCheng != null">
+			AND MingCheng like #{mingCheng,jdbcType=VARCHAR}
+		</if>
+		<if test="code != null">
+			AND Code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="parentId != null">
+			AND ParentID like #{parentId,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<!-- 查询 -->
+	<select id="selectAll" parameterType="java.util.Map" resultMap="ViewResult">
+		select
+		U.ID,U.MingCheng,U.Code,U.ParentID,(select MingCheng from Sys_Unit where ID = U.ParentID) AS ParentName
+		from Sys_Unit U 
+		where 1=1
+		<if test="id != null">
+			AND ID = #{id,jdbcType=VARCHAR}
+		</if>
+		<if test="xingMing != null">
+			AND MingCheng like #{mingCheng,jdbcType=VARCHAR}
+		</if>
+		<if test="code != null">
+			AND Code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="parentId != null">
+			AND ParentID like #{parentId,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<!-- 分页查询 -->
+	<select id="selectPage" parameterType="java.util.Map" resultMap="ViewResult">
+		select
+		U.ID,U.MingCheng,U.Code,U.ParentID,(select MingCheng from Sys_Unit where ID = U.ParentID) AS ParentName
+		from Sys_Unit U 
+		where 1=1
+		<if test="id != null">
+			AND ID = #{id,jdbcType=VARCHAR}
+		</if>
+		<if test="mingCheng != null">
+			AND MingCheng like #{mingCheng,jdbcType=VARCHAR}
+		</if>
+		<if test="code != null">
+			AND Code = #{code,jdbcType=VARCHAR}
+		</if>
+		<if test="parentId != null">
+			AND ParentID like #{parentId,jdbcType=VARCHAR}
+		</if>
+		limit #{begin}, #{PageSize}
+	</select>
+	<!-- 查询单个 -->
+	<select id="get" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		*
+		from Sys_Unit
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<select id="show" parameterType="java.lang.String" resultMap="ViewResult">
+		select
+		U.ID,U.MingCheng,U.Code,U.ParentID,(select MingCheng from Sys_Unit where ID = U.ParentID) AS ParentName
+		from Sys_Unit U
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<!-- 删除  -->
+	<delete id="delete" parameterType="java.lang.String">
+		delete from Sys_Unit
+		where
+		ID=#{id,jdbcType=VARCHAR}
+	</delete>
+	
+
+	<!-- 根据父类id 查询子类的id -->
+	<select id="getChilId" parameterType="java.lang.String"  resultType="java.lang.String">
+	   SELECT c.ID
+	   FROM Sys_Unit c
+	   WHERE c.ParentID=#{id,jdbcType=VARCHAR}
+	</select>
+	<insert id="insert" parameterType="doc.system.entity.Unit">
+		insert into Sys_Unit
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="mingCheng != null">
+				MingCheng,
+			</if>
+			<if test="code != null">
+				Code,
+			</if>
+			<if test="parentId != null">
+				ParentID,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="mingCheng != null">
+				#{mingCheng,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="parentId != null">
+				#{parentId,jdbcType=VARCHAR},
+			</if>	
+		</trim>
+	</insert>
+	<update id="update" parameterType="doc.system.entity.Unit">
+		update Sys_Unit
+		<set>
+			<if test="mingCheng != null">
+				MingCHeng = #{mingCheng,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				Code = #{code,jdbcType=VARCHAR},
+			</if>
+			<if test="parentId != null">
+				ParentID = #{parentId,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+</mapper>

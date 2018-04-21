@@ -1,0 +1,71 @@
+@CHARSET "UTF-8";
+.treeview .node-selected{
+	color: #FFFFFF;
+	background-color: #6fb6f4;
+}
+.treeview .list-group-item:hover{
+	color:#55A8E7;
+}
+.am-tabs {
+	height: 95%;
+}
+
+.am-tabs-nav li {
+	position: relative;
+	z-index: 1;
+}
+
+.am-tabs-nav .am-icon-close {
+	position: absolute;
+	top: 0;
+	right: 10px;
+	color: #888;
+	cursor: pointer;
+	z-index: 100;
+}
+
+.am-tabs-nav .am-icon-close:hover {
+	color: #333;
+}
+
+.am-tabs-nav .am-icon-close ~ a {
+	padding-right: 25px !important;
+}
+
+.am-tabs-bd {
+	height: 100%;
+}
+
+.am-tab-panel {
+	height: 100%;
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+
+.am-thumbnail-item {
+	display: block;
+	width: 120px;
+	height: 120px;
+	float: left;
+	margin: 5px 5px 5px 5px;
+}
+
+.am-thumbnail-item img {
+	width: 100px;
+	height: 100px;
+}
+
+.am-thumbnail-item div {
+	text-align: center;
+}
+.filesview {
+	margin: 0px 5px 5px 15px;
+}
+.filesview .ui-selecting {
+	background: #FECA40;
+}
+
+.filesview .ui-selected {
+	background: rgb(170, 189, 204);
+	color: white;
+}

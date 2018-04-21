@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="doc.file.mapper.TreeMapper">
+	<resultMap id="EntityResultMap" type="doc.file.entity.Tree">
+		<id column="id" jdbcType="VARCHAR" property="id" />
+	</resultMap>
+	<resultMap id="ViewResult" type="doc.file.view.TreeV"
+		extends="EntityResultMap">
+		
+		
+	</resultMap>
+	<select id="selectCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(*) as shu
+		from doc_tree
+		where 1=1
+		<if test="id != null">
+			AND ID = #{id,jdbcType=VARCHAR}
+		</if>
+		<if test="mingCheng != null">
+			AND MingCheng like #{mingCheng,jdbcType=VARCHAR}
+		</if>
+		<if test="parentId != null">
+			AND parentId= #{parentId,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<!-- 分页查询 -->
+	<select id="selectPage" parameterType="java.util.Map" resultMap="ViewResult">
+		SELECT * FROM(
+			SELECT ROWNUM AS rowno,T.* FROM doc_tree T WHERE ROWNUM &lt;= #{end}
+		) A
+		WHERE 1=1
+		<if test="id != null">
+			AND id = #{id,jdbcType=VARCHAR}
+		</if>
+		<if test="mingCheng != null">
+			AND mingcheng like #{mingCheng,jdbcType=VARCHAR}
+		</if>
+		<if test="parentId != null">
+			AND parentId= #{parentId,jdbcType=VARCHAR}
+		</if>
+		AND A.rowno &gt;= #{begin}
+	</select>
+	<!-- 查询单个 -->
+	<select id="get" parameterType="java.lang.String" resultMap="EntityResultMap">
+		select
+		*
+		from doc_tree
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+	<select id="show" parameterType="java.lang.String" resultMap="ViewResult">
+		select
+		*
+		from doc_tree
+		where id = #{id,jdbcType=VARCHAR}
+	</select>
+	<delete id="delete" parameterType="java.lang.String">
+		delete from doc_tree
+		where
+		id=#{id,jdbcType=VARCHAR}
+	</delete>
+	<insert id="insert" parameterType="doc.file.entity.Tree">
+		insert into doc_tree
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="mingCheng != null">
+				MingCheng,
+			</if>
+			<if test="parentId != null">
+				parentId,
+			</if>
+			<if test="lei != null">
+				lei,
+			</if>
+			<if test="icon != null">
+				icon,
+			</if>
+			<if test="virtualPath != null">
+				virtualPath,
+			</if>
+			<if test="realPath != null">
+				realPath,
+			</if>			
+			<if test="secret != null">
+				secret,
+			</if>
+			<if test="memo != null">
+				memo,
+			</if>			
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="mingCheng != null">
+				#{mingCheng,jdbcType=VARCHAR},
+			</if>
+			<if test="parentId != null">
+				#{parentId,jdbcType=VARCHAR},
+			</if>
+			<if test="lei != null">
+				#{lei,jdbcType=VARCHAR},
+			</if>
+			<if test="icon != null">
+				#{icon,jdbcType=VARCHAR},
+			</if>
+			<if test="virtualPath != null">
+				#{virtualPath,jdbcType=VARCHAR},
+			</if>
+			<if test="realPath != null">
+				#{realPath,jdbcType=VARCHAR},
+			</if>			
+			<if test="secret != null">
+				#{secret,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="update" parameterType="doc.file.entity.Tree">
+		update doc_tree
+		<set>
+			<if test="mingCheng != null">
+				MingCHeng = #{mingCheng,jdbcType=VARCHAR},
+			</if>
+			<if test="virtualPath != null">
+				#{virtualPath,jdbcType=VARCHAR},
+			</if>
+			<if test="secret != null">
+				#{secret,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>	
+		</set>
+		where id = #{id,jdbcType=VARCHAR}
+	</update>
+	
+	
+	
+	
+</mapper>

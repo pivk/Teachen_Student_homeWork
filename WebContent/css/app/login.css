@@ -1,0 +1,255 @@
+/***********************************¹«¹²²¿·Ö beginning***********************************/
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
+    border: 0 none;
+    /*font-size: 10px;*/
+    margin: 0;
+    outline: 0 none;
+    padding: 0;
+    vertical-align: baseline;
+    font-family: "Microsoft Yahei","Î¢ÈíÑÅºÚ",arial,Tahoma,Arial,Helvetica,STHeiti;
+}
+ol, ul {
+    list-style: outside none none;
+}
+blockquote, q {
+    quotes: none;
+}
+blockquote::before, blockquote::after, q::before, q::after {
+    content: none;
+}
+:focus {
+    outline: 0 none;
+}
+ins {
+    text-decoration: none;
+}
+del {
+    text-decoration: line-through;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+/***********************************µÇÂ¼Ò³ beginning***********************************/
+html,body{
+	height: 100%;
+	background: #F7F8FC;
+}
+.container {
+    width: 1170px;
+}
+.header-box{
+	background: #FFF;
+	height: 108px;
+	padding-top:15px;
+	line-height: 75px;
+}
+.header-box h4{
+	line-height: 75px;
+	color:#3D7B66;
+	font-size: 36px;
+	font-weight: bold;
+	padding-left: 20px;
+	-webkit-text-stroke:1px #FFF;
+	text-shadow: 2px 0px 2px #B4B4B4;	
+}
+.nav-list{
+	width: 200px;
+	margin-top: 50px;
+}
+.nav-list li{
+	float: left;
+	width: 80px;
+	height: 14px;
+	line-height: 14px;
+	border-right: 1px solid #46645C;
+	text-align: center;
+	color: #46645C;
+}
+.nav-list li:last-child{
+	border-right: 0;
+}
+.body-box{
+	background-size:100% 100%;
+	height: 410px;
+	/*margin-top: 80px;*/
+	position: relative;
+}
+.weixin-title{
+	color: #022342;
+	font-size:24px;
+	margin-bottom: 10px;
+}
+.loginForm{
+	background: rgba(255,255,255,0.8);
+	box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+	border-radius:8px;
+	width: 330px;
+	margin-top: 35px;
+	padding: 30px 30px 15px 30px;
+}
+.loginForm .form-control{
+	background: rgba(255,255,255,1);
+	border-color: #9C9C9C;
+	border-radius: 0;
+}
+.loginForm .input-group-lg>.form-control{
+	font-size: 1em;
+	/*color: #000;*/
+}
+.loginForm img.line{
+	margin-top: -2px;
+}
+.pwdIcon{
+	font-size: 1.6em;
+}
+.loginForm .input-group-lg>.form-control{
+    border-radius: 4px;
+    padding-left: 2px;
+    border-color: #DDE0F1;
+    color:#9FB7CB;
+}
+.input-group-lg>.form-control{
+	height:32px;
+	border-color: #9FB7CB;
+}
+.loginForm .form-group{
+	margin-top: 10px;
+	margin-bottom: 15px;
+	color: #46645C;
+}
+.loginForm .col-xs-3,
+.loginForm .col-xs-6,
+.loginForm .col-xs-9{
+	padding: 0;
+}
+.loginForm label.control-label{
+	color: #46645C;
+	font-weight: normal;
+	font-size: 14px;
+	line-height: 34px;
+}
+.loginUser-box{
+	margin-right: 10px;
+}
+.loginForm .input-group{
+	margin-top: 10px;	
+}
+.loginForm .input-group.title{
+	margin-top: 10px;
+    width: 100%;
+    margin-bottom: -2px;
+}
+.loginForm .input-group-addon{
+	background: rgba(255,255,255,0);
+}
+.loginForm input{
+	box-shadow: none;
+}
+.loginForm h5{
+	line-height: 44px;
+	color: #333;
+	font-weight: normal;
+	font-size: 24px;
+}
+.line-control{
+	width: 25%;
+	margin-top: 10px;
+}
+.icon-control{
+	display: inline-block;
+	padding-top: 10px;
+	padding-right: 6px;
+}
+.qq{
+	background: url(../../images/icon-qq.png) no-repeat;
+	padding-left: 20px;
+	margin-top: 10px;
+}
+.weixin{
+	background: url(../../images/icon-weixin.png) no-repeat;
+	padding-left: 20px;
+	margin-top: 10px;
+}
+.position-control{
+	height: 20px;
+	display: inline-block;
+}
+.form-control[type='checkbox']{
+    height: 14px;
+    float: left;
+    /* display: inline-block; */
+    width: auto;
+    margin-right: 6px;
+}
+.forgetPwd{
+	color:#46645C;
+}
+.forgetPwd:hover{
+	text-decoration: none;
+	color:#6C9A8E;
+}
+.loginForm h5 small{
+	margin-left: 10px;
+	color: #acbac7;
+	font-size: 14px;
+}
+.text-emphasis{
+	font-weight:bold;
+	font-size: 20px;
+}
+.statusCon{
+	margin-top: 2em;
+}
+.loginForm .btn-primary[type="submit"]{
+	background: #1F7D65;
+    padding: 12px 16px;
+    border: none;
+    height: 36px;
+    line-height: 12px;
+    border-radius: 0px;
+}
+.loginForm .btn-primary[type="submit"]:hover{
+	background: #165D4B;
+	border: none;
+}
+.auto-box{
+	width: 90px;
+	margin: 0px auto;
+}
+.footer-box{
+	background: #3B53B1;
+	width: 100%;
+	height: 40px;
+	line-height: 40px;
+	color: #FFF;
+	position: absolute;
+	bottom: 0;
+	text-align: center;
+}
+.tip-box{
+	margin-top: 15px;	
+}
+.tip-list{
+	padding-left: 37px;
+	color: #666;
+}
+.tip-list li{
+	line-height: 24px;
+	list-style:url(../../images/icon.png) outside circle;
+	color: #46645C;
+	font-size: 12px;
+}
+.tip-list li em{
+	color: #3e50b4;
+	font-style: normal;
+}
+.list-box{
+	padding-top: 10px;
+}
+.code-title{
+	font-size: 14px;
+	color:#46645C;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
