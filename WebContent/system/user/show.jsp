@@ -48,13 +48,6 @@
 						</tr>
 					</tbody>
 				</table>
-			<div style="height: 20px"></div>
-			<div class="am-form-group">
-					<div class="am-u-sm-9 am-u-sm-push-3">
-						<a class="am-btn am-btn-primary" href="/system/user/page.action">返回</a>
-					</div>
-				</div>
-			</div>
 		</div>
 	<script src="/js/jquery.min.js"></script>
 	<script src="/js/amazeui/js/amazeui.min.js"></script>

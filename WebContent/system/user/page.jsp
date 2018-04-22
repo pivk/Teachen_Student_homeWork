@@ -31,10 +31,13 @@
 							style="margin-left: 5px">
 							<span class="am-icon-sign-in"></span> 导入
 						</button>
-						<select id="unitId" name="unitId"
-							data-am-selected="{btnSize: 'sm'}">
-						</select>
-						<div class="am-form-group">
+						<button id="btAgain" type="button" class="am-btn am-btn-primary"
+							style="margin-left: 5px">
+							<span class="am-icon-sign-in"></span> 初始化
+						</button>
+						 <div class="am-form-group">
+						 	<input id="unitName" name="unitName" type="text" class="am-form-field am-input-sm" placeholder="组织" maxlength="25">
+							 <input id="unitId" name="unitId" type="hidden">
 							<input id="xingMing" name="xingMing" type="text"
 								class="am-form-field am-input-sm" placeholder="姓名" maxlength="25">
 						</div>
@@ -55,13 +58,13 @@
 							class="am-table am-table-striped am-table-hover table-main">
 							<thead>
 								<tr>
-									<th class="table-check"><input type="checkbox" id="main" /></th>
-									<th style="width: 150px">用户名</th>
-									<th style="width: 100px">姓名</th>
-									<th style="width: 150px">手机</th>
-									<th style="width: 150px">邮箱</th>
-									<th style="width: 100px">机构</th>
-									<th class="table-set">操作</th>
+									<th class="table-check"style="width: 2%"><input type="checkbox" id="main" /></th>
+									<th style="width: 10%">用户名</th>
+									<th style="width: 10%">姓名</th>
+									<th style="width: 10%">手机</th>
+									<th style="width: 10%">邮箱</th>
+									<th style="width: 20%">机构</th>
+									<th class="table-set"	>操作</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -73,7 +76,7 @@
 								共<span id="total"></span>条 第<span id="page"></span>/<span
 									id="pages"></span>页
 							</div>
-							<div class="am-fr">
+							<div class="am-fl">
 								<ul data-am-widget="pagination"
 									class="am-pagination am-pagination-default">
 									<li class="am-pagination-first "><a
@@ -100,7 +103,7 @@
 			<div class="am-modal-hd">提示信息</div>
 			<div id="message" class="am-modal-bd"></div>
 			<div class="am-modal-footer">
-				<span class="am-modal-btn">确定</span>
+				<span class="am-modal-btn" id="btsure">确定</span>
 			</div>
 		</div>
 	</div>
@@ -114,6 +117,7 @@
 			</div>
 		</div>
 	</div>
+	<!-- 
 	<div class="am-modal am-modal-alert" tabindex="-1" id="waiting-modal">
 		<div class="am-modal-dialog">
 			<div class="am-modal-hd">请等待</div>
@@ -127,12 +131,23 @@
 			</div>
 		</div>
 	</div>
+	 -->
+	 <div class="am-modal am-modal-loading am-modal-no-btn" tabindex="-1" id="my-modal-loading">
+	  <div class="am-modal-dialog">
+	    <div class="am-modal-hd">正在初始化...</div>
+	    <div class="am-modal-bd">
+	      <span class="am-icon-spinner am-icon-spin"></span>
+	    </div>
+	  </div>
+    </div>
+	 
 	<script src="/js/jquery.min.js"></script>
 	<script src="/js/amazeui/js/amazeui.min.js"></script>
 	<script src="/js/amazeui/js/app.js"></script>
 	<script src="/js/app.js"></script>
 	<script src="/js/pager.js"></script>
 	<script src="/js/api.js"></script>
+	<script src="/js/layer/layer.js"></script>
 	<script src="/system/user/page.js"></script>
 </body>
 </html>

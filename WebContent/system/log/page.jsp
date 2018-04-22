@@ -9,7 +9,7 @@
 <title>${appName}</title>
 <link rel="stylesheet" href="/js/amazeui/css/amazeui.min.css" />
 <link rel="stylesheet" href="/js/amazeui/css/admin.css">
-<link id="skin_css" rel="stylesheet" href="/skin/${sessionScope.get('USER').skin}/css/main.css">
+<link id="skin_css" rel="stylesheet" href="/skin/default/css/main.css">
 </head>
 <body>
 		<div class="admin-content">
@@ -32,13 +32,14 @@
 							style="margin-left: 5px">
 							<span class="am-icon-search"></span> 查询
 						</button>
-						
+						<!-- 
 									<button id="btExport" type="button" class="am-btn am-btn-primary" style="margin-left: 5px">
 										<span class="am-icon-download"></span> 导出
-									</button>
+									</button> -->
 								
 					</form>
 				</div>
+			
 				<div class="am-g">
 					<div class="am-u-sm-12">
 						<table id="table"
@@ -46,6 +47,7 @@
 							<thead>
 								<tr>
 									<th style="width: 200px;">标题</th>
+									<th style="width: 200px;">内容</th>
 									<th style="width: 200px;">时间</th>
 									<th >用户名</th>
 								</tr>
@@ -59,7 +61,7 @@
 								共<span id="total"></span>条 第<span id="page"></span>/<span
 									id="pages"></span>页
 							</div>
-							<div class="am-fr">
+							<div class="am-fl">
 								<ul data-am-widget="pagination"
 									class="am-pagination am-pagination-default">
 									<li class="am-pagination-first "><a
@@ -77,8 +79,7 @@
 							</div>
 						</div>
 					</div>
-
-				</div>
+ 				</div>
 			</div>
 		</div>
 		<div class="am-modal am-modal-alert" tabindex="-1" id="my-alert">

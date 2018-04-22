@@ -9,7 +9,7 @@
 <title>${appName}</title>
 <link rel="stylesheet" href="/js/amazeui/css/amazeui.min.css" />
 <link rel="stylesheet" href="/js/amazeui/css/admin.css">
-<link id="skin_css" rel="stylesheet" href="/skin/${sessionScope.get('USER').skin}/css/main.css">
+<link id="skin_css" rel="stylesheet" href="/skin/default/css/main.css">
 </head>
 <body>
 		<div class="admin-content">
@@ -38,19 +38,33 @@
 							<th style="width: 200px">上级单位</th>
 							<td>${unit.parentName }</td>
 						</tr>
+						<tr>
+						   
+						    <th style="width: 200px">类型</th>
+						    <td id="leixingId"></td>
+						</tr>
+						
 					</tbody>
 				</table>
-			<div style="height: 20px"></div>
-			<div class="am-form-group">
-					<div class="am-u-sm-9 am-u-sm-push-3">
-						<a class="am-btn am-btn-primary" href="/system/unit/page.action">返回</a>
-					</div>
-				</div>
 			</div>
 		</div>
 	<script src="/js/jquery.min.js"></script>
 	<script src="/js/amazeui/js/amazeui.min.js"></script>
 	<script src="/js/amazeui/js/app.js"></script>
 	<script src="/js/app.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function () {
+			var str=${unit.unitLei };
+			if(str==0){
+				$("#leixingId").text("公司");
+			}
+			if(str==1){
+				$("#leixingId").text("部门");
+			}
+			if(str==2){
+				$("#leixingId").text("项目");
+			}
+		});
+	</script>
 </body>
 </html>

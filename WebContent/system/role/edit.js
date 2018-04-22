@@ -29,7 +29,7 @@ $(document).ready(function() {
 		save();
 	});
 	$("#btBack").click(function() {
-		location.href = "/system/role/page.action";
+		parent.closeTab(getFrameId());
 	});
 	
 	init();

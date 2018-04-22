@@ -58,6 +58,9 @@ $(document).ready(function() {
 	$("#btBack").click(function() {
 		location.href = "/system/user/page.action";
 	});
+	$("#btsure").click(function() {
+		parent.layer.closeAll();
+	});
 	getRoleList();
 	load();
 });

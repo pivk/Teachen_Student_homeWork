@@ -9,7 +9,7 @@
 <title>${appName}</title>
 <link rel="stylesheet" href="/js/amazeui/css/amazeui.min.css" />
 <link rel="stylesheet" href="/js/amazeui/css/admin.css">
-<link id="skin_css" rel="stylesheet" href="/skin/${sessionScope.get('USER').skin}/css/main.css">
+<link id="skin_css" rel="stylesheet" href="/skin/default/css/main.css">
 </head>
 <body>
 		<div class="admin-content">
@@ -27,30 +27,31 @@
 					<div class="am-g am-margin-top">
 						<div class="am-u-sm-4 am-u-md-2 am-text-right"><span style="color:red">*&nbsp;</span>名称</div>
 						<div class="am-u-sm-8 am-u-md-4 am-u-end col-end">
-							<input id="mingCheng" name="mingCheng" type="text" required maxlength="10"
+							<input id="mingCheng" name="mingCheng" type="text" required maxlength="50"
 								class="am-input-sm"  >
 						</div>											
 					</div>
 					<div class="am-g am-margin-top">
 						<div class="am-u-sm-4 am-u-md-2 am-text-right">内部号</div>
 						<div class="am-u-sm-8 am-u-md-4 am-u-end col-end">
-							<input id="code" name="code" type="text" maxlength="10"
+							<input id="code" name="code" type="text" maxlength="20"
 								class="am-input-sm"  >
 						</div>						
 					</div>
 					<div class="am-g am-margin-top">
 						<div class="am-u-sm-4 am-u-md-2 am-text-right">上级单位</div>
 						<div class="am-u-sm-8 am-u-md-4 am-u-end col-end">
-							<select id="unitId" name="parentId">
-						</select>								
+						<!-- 	<select id="unitId" name="parentId">
+						</select>	 -->	
+						<input type="hidden"name="parentId" value="<%=request.getParameter("parentid")==null?"":request.getParameter("parentid")%>">
+						<input type="text" class="am-input-sm am-form-field"  value="<%=request.getParameter("text")==null?"":request.getParameter("text")%>" disabled>				
 						</div>
 					</div>
-					
 					<div style="height: 50px"></div>
 					<div class="am-form-group">
 						<div class="am-u-sm-9 am-u-sm-push-3">
 							<button id="btSave" type="button" class="am-btn am-btn-primary">保存</button>
-							<button id="btBack" type="button" class="am-btn am-btn-primary">返回</button>
+							<button id="btCancel" type="button" class="am-btn am-btn-primary">取消</button>
 						</div>
 					</div>
 				</form>
@@ -62,7 +63,7 @@
 			<div class="am-modal-hd">提示信息</div>
 			<div id="message" class="am-modal-bd"></div>
 			<div class="am-modal-footer">
-				<span class="am-modal-btn">确定</span>
+				<span class="am-modal-btn" id="btsure">确定</span>
 			</div>
 		</div>
 	</div>

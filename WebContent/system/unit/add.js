@@ -1,12 +1,12 @@
 function save() {
 	if (!$('#form').validator("isFormValid"))
 		return false;
-
 	$.post("/system/unit/doAdd.action", $("#form").serialize(), function(data) {
 		if (data.state == true) {
 			$("#message").text("操作成功");
 			$("#form")[0].reset();
 			$('#form').validator('destroy');
+			parent.location.reload();
 		} else {
 			$("#message").text("操作失败：" + data.message);
 		}
@@ -20,8 +20,12 @@ $(document).ready(function() {
 	$("#btSave").click(function() {
 		save();
 	});
-	$("#btBack").click(function() {
-		location.href = "/system/unit/page.action";
+	$("#btCancel").click(function() {
+		parent.layer.closeAll();
+	});
+	$("#btsure").click(function() {
+		parent.layer.closeAll();
+		
 	});
 	init();
 });

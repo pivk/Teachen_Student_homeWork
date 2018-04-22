@@ -3,12 +3,11 @@ function load(newpage){
 	$("#table > tbody").empty();
 	$.get("/system/role/doPage.action",{ 
 			page: page,
-			xingMing:$("#xingMing").val(),
+			mingCheng:$("#mingCheng").val(),
 		},function(response,status){
 		showPage(response.data.total);
 		jQuery.each(response.data.data, function(key, val) {
 			var row = "<tr>"
-				+ "<td>"+ val.id + "</td>"
 				+ "<td>"+ (val.mingCheng==null?"":val.mingCheng) + "</td>"
 				+"<td><button type=\"button\" onclick=\"Edit('"+val.id+"')\" class=\"am-btn am-btn-default am-btn-xs am-text-secondary\">编辑</button>&nbsp;"
 				+"<button type=\"button\" onclick=\"Remove('"+val.id+"')\" class=\"am-btn am-btn-default am-btn-xs am-text-danger\">删除</button>&nbsp;"
@@ -18,14 +17,15 @@ function load(newpage){
 		});
 	  });
 }
-function Edit(uid){
-	location.href="/system/role/edit.action?id="+uid;
+
+function Edit(id){
+	parent.openTab("2","修改角色","/system/role/edit.action?id="+id);
 }
-function Show(uid){
-	location.href="/system/role/show.action?id="+uid;
+function Show(id){
+	parent.openTab("3","查看角色","/system/role/show.action?id="+id);
 }
-function Power(uid){
-	location.href="/system/role/power.action?id="+uid;
+function Power(id){
+	parent.openTab("1","角色权限","/system/role/power.action?id="+id);
 }
 function Remove(uid){
     var onConfirm = function() {
@@ -52,9 +52,20 @@ function Remove(uid){
       });
     }
 }
+
 $(document).ready(function () {
 	$("#btAdd").click(function(){
-		location.href="/system/role/add.action";
+		parent.openNewTab("添加角色","/system/role/add.action");
 	});	
+	$("#btQuery").click(function(){
+		load(1);
+	});
+	$("#btExport").click(function() {
+		location.href = "/system/role/importRole.action";
+	});
+	$("#btSave").click(function() {
+		save();
+	});
+	
 	load(1);
 });

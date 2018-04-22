@@ -32,7 +32,6 @@
 					<div class="am-form-group">
 						<div class="am-u-sm-9 am-u-sm-push-3">
 							<button id="btSave" type="button" class="am-btn am-btn-primary">保存</button>
-							<button id="btBack" type="button" class="am-btn am-btn-primary">返回</button>
 						</div>
 					</div>
 				</form>
@@ -44,7 +43,7 @@
 			<div class="am-modal-hd">提示信息</div>
 			<div id="message" class="am-modal-bd"></div>
 			<div class="am-modal-footer">
-				<span class="am-modal-btn">确定</span>
+				<span class="am-modal-btn" id="btsure">确定</span>
 			</div>
 		</div>
 	</div>

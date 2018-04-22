@@ -1,5 +1,13 @@
 function save() {
-	$.post("/system/power/saveRolePower.action",$("#form").serialize(), function(data) {
+	var powerIds="";
+	var selectedPowers=$('#tree').treeview('getChecked');
+	$(selectedPowers).each(function(index, item) {
+		powerIds+=item.id+",";
+	});
+	$.post("/system/power/saveRolePower.action",{
+		roleId:$("#roleId").val(),
+		powerIds:powerIds,
+	}, function(data) {
 		if (data.state == true) {
 			$("#message").text("操作成功");
 		} else {
@@ -9,14 +17,15 @@ function save() {
 	});
 }
 function getPower() {
-	$("input[name='Power']").removeAttr("checked");
+	$('#tree').treeview('uncheckAll',{ silent: true });
 	var roleId = $("#roleId").val();
-	$.post("/system/power/getRolePower.action", {
-		roleId : roleId
-	}, function(data) {
-		$(data.data).each(function(index, item) {
-			$("#" + item.id).prop("checked", true);
-		});
+	$.post("/system/power/getRolePower.action", 
+		{
+			roleId : roleId
+		}, function(data) {
+			$(data.data).each(function(index, item) {
+				checkNodeById(item.id);
+			});
 	});
 }
 function getRoleList() {
@@ -42,36 +51,21 @@ function load() {
 	$("#roleId").val($("#FirstRoleId").val());
 	getPower();
 }
-$(document).ready(
-		function() {
-			$("#btSave").click(function() {
-				save();
-			});
-			$("#btBack").click(function() {
-				location.href = "/system/role/page.action";
-			});
-		    $("#roleId").change(function () {
-		        getPower();
-		    });		
-			$(".checkbox-inline :checkbox").each(
-					function(index, item) {
-						var id = $(item).attr("id");
-						$(item).change(function() {
-									$("#" + id + "_Power :checkbox").prop("checked",$("#" + id).prop("checked"));
-								});
-						$("#" + id + "_Power :checkbox").change(
-								function() {
-									var found = false;
-									$("#" + id + "_Power :checkbox").each(
-											function(index, item) {
-												if ($(item).prop("checked")) {
-													found = true;
-													return false;
-												}
-											});
-									$("#" + id).prop("checked", found);
-								});
-					});
+$(document).ready(function() {
+	$("#btSave").click(function() {
+		save();
+	});
 
-			load();
-		});
+    $("#roleId").change(function () {
+        getPower();
+    });	
+	$('#tree').treeview({
+		data : myMenu,
+		uiLibrary : 'bootstrap',
+		levels : 1,
+		showCheckbox:true,
+        onNodeChecked:nodeChecked ,  
+        onNodeUnchecked:nodeUnchecked,
+	});    
+	load();
+});
