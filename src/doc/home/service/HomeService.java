@@ -49,6 +49,7 @@ public class HomeService extends BaseService {
 			user = mapper.login(params);
 		} catch (Exception ex) {
 			this.setMessage("²Ù×÷Ê§°Ü");
+			System.out.println(ex);
 		} finally {
 			database.closeSession();
 		}

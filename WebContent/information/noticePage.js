@@ -12,7 +12,6 @@ function load(newpage){
 				+ "<td>"+ (val.createTime==null?"":val.createTime.substring(0,16)) + "</td>"
 				+ "<td>"+ (val.creator==null?"":val.creator) + "</td>"
 				+ "<td>"+ (val.du==null?"":val.du) + "</td>"
-				+ "<td>"+ (val.duTime==null?"":val.duTime.substring(0,16)) + "</td>"
 				+"<td><button type='button' onclick=Show('"+val.id+"') class='am-btn am-btn-default am-btn-xs am-text-primary'>查看</button>&nbsp;"
 				+"</tr>";
 			$("#table > tbody").append(row);

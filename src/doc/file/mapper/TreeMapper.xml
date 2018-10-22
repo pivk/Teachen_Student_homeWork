@@ -9,6 +9,29 @@
 		
 		
 	</resultMap>
+	<resultMap id="ViewResult2" type="doc.file.entity.Directory"
+		extends="EntityResultMap">
+		
+		
+	</resultMap>
+	<select id="selectStudentCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(*) as shu
+		from doc_tree
+		where 1=1
+		<if test="id != null">
+			AND ID = #{id,jdbcType=VARCHAR}
+		</if>
+		<if test="mingCheng != null">
+			AND MingCheng like #{mingCheng,jdbcType=VARCHAR}
+		</if>
+		<if test="parentId != null">
+			AND parentId= #{parentId,jdbcType=VARCHAR}
+		</if>
+		<if test="creator != null">
+			AND creator= #{creator,jdbcType=VARCHAR}
+		</if>
+	</select>
 	<select id="selectCount" parameterType="java.util.Map"
 		resultType="java.lang.Integer">
 		select count(*) as shu
@@ -23,12 +46,16 @@
 		<if test="parentId != null">
 			AND parentId= #{parentId,jdbcType=VARCHAR}
 		</if>
+		<if test="xueqi != null">
+			AND xueqi= #{xueqi,jdbcType=VARCHAR}
+		</if>
+		<if test="creator != null">
+			AND creator= #{creator,jdbcType=VARCHAR}
+		</if>
 	</select>
 	<!-- 分页查询 -->
 	<select id="selectPage" parameterType="java.util.Map" resultMap="ViewResult">
-		SELECT * FROM(
-			SELECT ROWNUM AS rowno,T.* FROM doc_tree T WHERE ROWNUM &lt;= #{end}
-		) A
+		SELECT T.* FROM doc_tree T  
 		WHERE 1=1
 		<if test="id != null">
 			AND id = #{id,jdbcType=VARCHAR}
@@ -39,7 +66,39 @@
 		<if test="parentId != null">
 			AND parentId= #{parentId,jdbcType=VARCHAR}
 		</if>
-		AND A.rowno &gt;= #{begin}
+		<if test="creator != null">
+			AND creator= #{creator,jdbcType=VARCHAR}
+		</if>
+		<if test="xueqi != null">
+			AND xueqi= #{xueqi,jdbcType=VARCHAR}
+		</if>
+		limit #{begin}, #{end}
+	</select>
+	<!-- 分页查询 -->
+	<select id="selectStudentPage" parameterType="java.util.Map" resultMap="ViewResult">
+		SELECT d.* FROM  doc_tree d left join  doc_user_tree T on T.treeId=d.id  
+		WHERE 1=1
+		<if test="id != null">
+			AND id = #{id,jdbcType=VARCHAR}
+		</if>
+		<if test="mingCheng != null">
+			AND mingcheng like #{mingCheng,jdbcType=VARCHAR}
+		</if>
+		<if test="xueqi != null">
+			AND xueqi= #{xueqi,jdbcType=VARCHAR}
+		</if>
+		<if test="parentId != null">
+			AND parentId= #{parentId,jdbcType=VARCHAR}
+		</if>
+		<if test="creator != null">
+			AND T.userID= #{creator,jdbcType=VARCHAR}
+		</if>
+		limit #{begin}, #{end}
+	</select>
+	
+	<!-- 分页查询 -->
+	<select id="selectAll" parameterType="java.util.Map" resultMap="ViewResult2">
+		SELECT T.* FROM doc_tree T  
 	</select>
 	<!-- 查询单个 -->
 	<select id="get" parameterType="java.lang.String" resultMap="EntityResultMap">
@@ -89,6 +148,12 @@
 			<if test="memo != null">
 				memo,
 			</if>			
+			<if test="creator != null">
+				creator,
+			</if>			
+			<if test="xueqi != null">
+				xueqi,
+			</if>			
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -117,6 +182,31 @@
 			</if>
 			<if test="memo != null">
 				#{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="creator != null">
+				#{creator,jdbcType=VARCHAR},
+			</if>
+			<if test="xueqi != null">
+				#{xueqi,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<insert id="insertTree" parameterType="doc.file.entity.Directory">
+		insert into doc_user_tree
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				userid,
+			</if>
+			<if test="id != null">
+				treeid,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				#{userId,jdbcType=VARCHAR},
+			</if>
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
 			</if>
 		</trim>
 	</insert>

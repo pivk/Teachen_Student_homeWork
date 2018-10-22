@@ -43,7 +43,7 @@
 		select
 		L.ID,BiaoTi, NeiRong , ShiJian, U.XingMing AS XMing
 		
-		from cr_log L left Join cr_user U on L.UserId=U.ID
+		from Sys_log L left Join Sys_user U on L.UserId=U.ID
 		where 1=1		
 		<if test="biaoTi != null">
 			AND BiaoTi like #{biaoTi,jdbcType=VARCHAR}

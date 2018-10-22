@@ -32,10 +32,10 @@
 			</div>
 			<hr>
 			<div class="am-g">
-				<div class="admin-sidebar am-offcanvas am-u-sm-4" id="admin-offcanvas">
+				<div class="admin-sidebar am-offcanvas am-u-sm-3" id="admin-offcanvas">
 					<div id="tree"></div>
 				</div>
-				<div class="am-u-sm-8">
+				<div class="am-u-sm-9">
 					<div class="am-topbar">
 						<form id="form"
 							class="am-topbar-form am-topbar-left am-form-inline">
@@ -48,15 +48,13 @@
 								style="margin-left: 5px">
 								<span class="am-icon-search"></span> 查询
 							</button>
-						
-						</button>
-							<button id="btAddUnit" type="button"
+													<button id="btAddUnit" type="button"
 								class="am-btn am-btn-primary">
-								<span class="am-icon-plus"></span> 增加机构
+								<span class="am-icon-plus"></span> 增加机构班级
 							</button>
 							
 						   <input type="hidden" name="parentId" id="parentId">
-							<span style="margin-left: 15px">当前机构：</span><span id="select">全部</span>
+							<span style="margin-left: 15px">当前机构班级：</span><span id="select">全部</span>
 						</form>
 					</div>
 					<div class="am-u-sm-12">
@@ -65,7 +63,6 @@
 							<thead>
 								<tr>
 									<th style="width: 150px">名称</th>
-									<th style="width: 100px">内部号</th>
 									<th style="width: 100px">上级名字</th>
 									<th class="table-set" style="width: 150px">操作</th>
 								</tr>

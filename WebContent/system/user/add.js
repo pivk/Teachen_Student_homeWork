@@ -24,7 +24,8 @@ $(document).ready(function() {
 	$("#btsure").click(function() {
 		parent.layer.closeAll();
 	});
-	$("#unitName").click(function() {
+	$("#a").click(function() {
+	
 		layer.open({
 			type : 2,
 			title : '选择机构',
@@ -36,7 +37,7 @@ $(document).ready(function() {
 			yes : function(index,layero) {
 				var iframeWin = window[layero.find('iframe')[0]['name']];
 				var selected=iframeWin.getSelectedJson();//获取选择的数据Json格式
-				$("#unitName").val(selected[0].name);
+				$("#a").val(selected[0].name);
 				$("#unitId").val(selected[0].id);
 				layer.closeAll();//关闭弹出窗
 			},

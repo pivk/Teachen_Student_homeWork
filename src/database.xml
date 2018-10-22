@@ -7,16 +7,20 @@
 		<environment id="development">
 			<transactionManager type="JDBC" />
 			<dataSource type="POOLED">
-				<property name="driver" value="oracle.jdbc.OracleDriver" />
-				<property name="url" value="jdbc:oracle:thin:@192.168.0.10:1521:orcl" /> 
-				<property name="username" value="oa" /> 
-				<property name="password" value="123456" />
+		<property name="driver" value="com.mysql.jdbc.Driver" />
+				<property name="url"
+					value="jdbc:mysql://localhost:3306/work?characterEncoding=utf8&amp;useSSL=false&amp;allowMultiQueries=true&amp;zeroDateTimeBehavior=convertToNull" />
+				<property name="username" value="root" />
+				<property name="password" value="123" />
 			</dataSource>
 		</environment>
 	</environments>
 	<mappers>
+		<package name="doc.work.mapper" />
 		<package name="doc.system.mapper" />
 		<package name="doc.home.mapper" />
 		<package name="doc.file.mapper" />
-	</mappers>
+		<package name="doc.information.mappper" />
+<!-- 		<package name="doc.work.mappper" />
+ -->	</mappers>
 </configuration>

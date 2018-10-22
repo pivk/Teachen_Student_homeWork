@@ -49,8 +49,6 @@
 									<th style="width: 15%">标题</th>
 									<th style="width: 15%">创建时间</th>
 									<th style="width: 15%">创建人</th>
-									<th style="width: 15%">状态</th>
-									<th style="width: 15%">阅读时间</th>
 									<th class="table-set">操作</th>
 								</tr>
 							</thead>

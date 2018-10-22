@@ -6,6 +6,20 @@ public class Menu {
 	private String icon;
 	private String url;
 	private List<Menu> nodes;
+	private boolean flag;
+	private String unitName;
+	public boolean isFlag() {
+		return flag;
+	}
+	public void setFlag(boolean flag) {
+		this.flag = flag;
+	}
+	public String getUnitName() {
+		return unitName;
+	}
+	public void setUnitName(String unitName) {
+		this.unitName = unitName;
+	}
 	public String getId() {
 		return id;
 	}

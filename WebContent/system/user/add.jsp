@@ -51,9 +51,9 @@
 						</div>
 					</div>
 					<div class="am-g am-margin-top">
-						<div class="am-u-sm-4 am-u-md-2 am-text-right"><span style="color:red">*&nbsp;</span>所属机构</div>
+						<div class="am-u-sm-4 am-u-md-2 am-text-right"><span style="color:red">*&nbsp;</span>班级</div>
 						<div class="am-u-sm-8 am-u-md-4 am-u-end col-end">
-							<input id="unitName" required  name="unitName" type="text" class="am-form-field am-input-sm" placeholder="组织" maxlength="25">
+							<input id="a"   name="unitName" type="text" class="am-form-field am-input-sm" placeholder="班级" maxlength="25">
 							<input id="unitId" required name="unitId" type="hidden">
 						</div>
 					</div>

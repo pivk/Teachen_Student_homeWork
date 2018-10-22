@@ -1,23 +1,30 @@
 package doc.system.controller;
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import doc.common.AppData;
 import doc.common.BaseController;
-import doc.system.entity.Log;
+import doc.common.annotation.LoginAnnotation;
+import doc.home.view.Menu;
 import doc.system.entity.Power;
 import doc.system.entity.User;
-import doc.system.service.LogService;
 import doc.system.service.PowerService;
 import doc.system.view.PowerV;
 import pushunsoft.common.JsonResult;
+
 /**
  * PowerController
  * 
@@ -29,11 +36,32 @@ import pushunsoft.common.JsonResult;
 public class PowerController extends BaseController {
 	@Resource
 	private PowerService powerService;
-	@Resource
-	private LogService logService;
-	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+
 	/**
-	 * 查询角色权限
+	 * 鏌ヨ
+	 * 
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@LoginAnnotation
+	@RequestMapping("/index")
+	public Model page(HttpServletRequest request, Model model) {
+		model.addAttribute("title", "鏉冮檺绠＄悊");
+		List<Menu> menuList = powerService.MakeMenu();
+		ObjectMapper mapper = new ObjectMapper();
+		String menuJson = "[]";
+		try {
+			menuJson = mapper.writeValueAsString(menuList);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		model.addAttribute("units", menuJson);
+		return model;
+	}
+
+	/**
+	 * 鏌ヨ瑙掕壊鏉冮檺
 	 * 
 	 * @param request
 	 * @return
@@ -48,6 +76,7 @@ public class PowerController extends BaseController {
 		json.setData(list);
 		return json;
 	}
+
 	/**
 	 * 
 	 * @param request
@@ -57,7 +86,9 @@ public class PowerController extends BaseController {
 	@RequestMapping("/saveRolePower")
 	public JsonResult saveRolePower(HttpServletRequest request) {
 		String roleId = request.getParameter("roleId");
-		String[] powers = request.getParameterValues("Power");
+		String powerIds =request.getParameter("powerIds");
+		powerIds = powerIds.substring(0, powerIds.length()-1);
+		String[] powers = powerIds.split(",");
 		List<Power> powerList = new ArrayList<Power>();
 		if (powers != null && powers.length > 0) {
 			for (String id : powers) {
@@ -69,16 +100,82 @@ public class PowerController extends BaseController {
 		boolean result = powerService.saveRolePower(roleId, powerList);
 		JsonResult json = new JsonResult();
 		json.setState(result);
-		if(result){
-			Log log = new Log();
-			log.setNeiRong("");
-			log.setBiaoTi(roleId+"添加角色权限");
-			User user1 = (User) request.getSession().getAttribute(AppData.Session_User);
-			log.setUserId(user1.getId());
-			Date date2 =new Date();
-			log.setTimestamp(dateFormatter.format(date2));
-			logService.add(log);
-		}
+
 		return json;
 	}
+	@LoginAnnotation
+	@RequestMapping("/power")
+	public Model power(HttpServletRequest request, Model model) {
+		model.addAttribute("title", "鑷畾涔夋棩甯稿姙鍏?");
+		List<Menu> menuList=null;
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			String userId = ((User) session.getAttribute(AppData.Session_User)).getId();
+			menuList=powerService.MakeUserMenu(userId);
+		}
+		ObjectMapper mapper = new ObjectMapper();
+		String menuJson = "[]";
+		try {
+			menuJson = mapper.writeValueAsString(menuList);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		model.addAttribute("tree", menuJson);
+		return model;
+	}
+	
+	/**
+	 * 鏌ヨ鐢ㄦ埛鏃ュ父鍔炲叕
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping("/getOffice")
+	public JsonResult getOffice(HttpServletRequest request) {
+		String userId=null;
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			userId = ((User) session.getAttribute(AppData.Session_User)).getId();
+		}
+		List<PowerV> list = powerService.getOffice(userId);
+		JsonResult json = new JsonResult();
+		json.setState(true);
+		json.setData(list);
+		return json;
+	}
+	/*@ResponseBody
+	@RequestMapping("/saveOffice")
+	public JsonResult saveOffice(HttpServletRequest request) {
+		String userId=null;
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			userId = ((User) session.getAttribute(AppData.Session_User)).getId();
+		}
+		String powerIds =request.getParameter("powerIds");
+		powerIds = powerIds.substring(0, powerIds.length()-1);
+		String[] powers = powerIds.split(",");
+		List<Power> powerList = new ArrayList<Power>();
+		if (powers != null && powers.length > 0) {
+			for (String id : powers) {
+				Power power = new Power();
+				power.setId(id);
+				powerList.add(power);
+			}
+		}
+		boolean result = powerService.saveOffice(userId, powerList);
+		List<Menu> officeList = powerService.MakeOfficeMenu(userId);
+		ObjectMapper mapper = new ObjectMapper();
+		String officeJson = "[]";
+		try {
+			officeJson = mapper.writeValueAsString(officeList);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		session.setAttribute("office", officeJson);
+		JsonResult json = new JsonResult();
+		json.setState(result);
+
+		return json;
+	}*/
 }

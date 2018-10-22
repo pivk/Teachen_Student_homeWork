@@ -16,7 +16,38 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * ========================================================= */
-
+//zff 添加单机事件   在727 行添加单机事件
+    function itemOnclick(target){ 
+        //找到当前节点id  
+        var nodeid = $(target).attr('data-nodeid');
+        var tree = $('#tree');  
+        //获取当前节点对象  
+        var node = tree.treeview('getNode', nodeid);  
+        if(node.state.expanded){   
+            //处于展开状态则折叠  
+            tree.treeview('collapseNode', node.nodeId);    
+        } else {  
+            //展开  
+            tree.treeview('expandNode', node.nodeId);  
+        }  
+    } 
+    function itemOnclickParent(chil){
+    	var target=$(chil).parent();
+		  //找到当前节点id  
+        var nodeid = $(target).attr('data-nodeid');  
+        if(nodeid){
+        	var tree = $('#tree');  
+            //获取当前节点对象  
+            var node = tree.treeview('getNode', nodeid);  
+            if(node.state.expanded){   
+                //处于展开状态则折叠  
+                tree.treeview('collapseNode', node.nodeId);    
+            } else {  
+                //展开  
+                tree.treeview('expandNode', node.nodeId);  
+            } 
+        }
+    } 
 ;(function ($, window, document, undefined) {
 
 	/*global jQuery, console*/
@@ -33,8 +64,8 @@
 
 		levels: 2,
 
-		expandIcon: 'glyphicon glyphicon-chevron-right',
-		collapseIcon: 'glyphicon glyphicon-chevron-down',
+		expandIcon: 'glyphicon glyphicon-plus',
+		collapseIcon: 'glyphicon glyphicon-minus',
 		emptyIcon: 'glyphicon',
 		nodeIcon: '',
 		selectedIcon: '',
@@ -142,10 +173,14 @@
 
 			// Search methods
 			search: $.proxy(this.search, this),
-			clearSearch: $.proxy(this.clearSearch, this)
+			clearSearch: $.proxy(this.clearSearch, this),
+			
+			getCount: $.proxy(this.getCount, this)
 		};
 	};
-
+	Tree.prototype.getCount = function () {
+		return this.nodes.length;
+	};
 	Tree.prototype.init = function (options) {
 
 		this.tree = [];
@@ -517,8 +552,8 @@
 				.addClass(node.state.disabled ? 'node-disabled': '')
 				.addClass(node.state.selected ? 'node-selected' : '')
 				.addClass(node.searchResult ? 'search-result' : '') 
-				.attr('data-nodeid', node.nodeId);
-				//.attr('style', _this.buildStyleOverride(node));
+				.attr('data-nodeid', node.nodeId)
+				.attr('style', _this.buildStyleOverride(node));
 
 			// Add indent/spacer to mimic tree structure
 			for (var i = 0; i < (level - 1); i++) {
@@ -687,15 +722,16 @@
 	};
 
 	Tree.prototype.template = {
-		list: '<ul class="list-group"></ul>',
-		item: '<li class="list-group-item"></li>',
+		list: '<ul class="list-group" ></ul>',
+		item: '<li class="list-group-item" onclick="itemOnclick(this);" ></li>',
 		indent: '<span class="indent"></span>',
-		icon: '<span class="icon"></span>',
+		icon: '<span class="icon" onclick="itemOnclickParent(this);"></span>',
 		link: '<a href="#" style="color:inherit;"></a>',
 		badge: '<span class="badge"></span>'
 	};
+	
 
-	Tree.prototype.css = '.treeview .list-group-item{cursor:pointer}.treeview span.indent{margin-left:10px;margin-right:10px}.treeview span.icon{width:12px;margin-right:5px}.treeview .node-disabled{color:silver;cursor:not-allowed}'
+	//Tree.prototype.css = '.treeview .list-group-item{cursor:pointer}.treeview span.indent{margin-left:10px;margin-right:10px}.treeview span.icon{width:35px;margin-right:5px}.treeview .node-disabled{color:silver;cursor:not-allowed}'
 
 
 	/**

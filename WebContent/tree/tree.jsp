@@ -21,9 +21,14 @@
 			<div class="am-topbar">
 				<form id="form" class="am-topbar-form am-topbar-left am-form-inline">
 					<input type="hidden" name="parentId" id="parentId" value="${parentId}" />
-					<select id="unitId" name="unitId"
+					<select id="xueqi" name="xueqi"
 						data-am-selected="{btnSize: 'sm'}">
-						<option>选择类别</option>
+						<option value="2017-2018上学期" >2017-2018上学期</option>
+						<option value="2017-2018下学期">2017-2018下学期</option>
+						<option value="2016-2017上学期">2016-2017上学期</option>
+						<option value="2016-2017下学期">2016-2017下学期</option>
+						<option value="2015-2016上学期">2015-2016上学期</option>
+						<option value="2015-2016下学期">2015-2016下学期</option>
 					</select>
 					<div class="am-form-group">
 						<input id="mingCheng" name="mingCheng" type="text"
@@ -33,37 +38,14 @@
 						style="margin-left: 5px">
 						<span class="am-icon-search"></span>查询
 					</button>
-				</form>
-			</div>
-			<div class="am-btn-toolbar">
-				<div class="am-btn-group">
-					<button id="btCreateFile" type="button" class="am-btn am-btn-primary am-radius">
-						<span class="am-icon-create"></span>上传文件
-					</button>
 					<button id="btCreateDirectory" type="button" class="am-btn am-btn-primary am-radius">
 						<span class="am-icon-create"></span>创建目录
 					</button>
-				</div>
-				<div class="am-btn-group">
-					<button type="button" class="am-btn am-btn-primary am-radius">
-						<span class="am-icon-edit"></span>编辑
-					</button>
-					<button id="btRemove" type="button" class="am-btn am-btn-primary am-radius">
-						<span class="am-icon-delete"></span>删除
-					</button>
-					<button id="btShow" type="button" class="am-btn am-btn-primary am-radius">
-						<span class="am-icon-view"></span>查看
-					</button>
-				</div>
-				<div class="am-btn-group">
-					<button id="btDownload" type="button" class="am-btn am-btn-primary am-radius">
-						<span class="am-icon-download"></span>下载
-					</button>
-				</div>
+				</form>
 			</div>
 			<div class="am-g">
 				<ol id="navPath" class="am-breadcrumb">
-					<li class="am-active">云盘</li>
+					<li class="am-active">首页</li>
 				</ol>
 				<div id="filesview" class="filesview">
 
@@ -123,7 +105,7 @@
 	<script src="/js/amazeui/js/app.js"></script>
 	<script src="/js/app.js"></script>
 	<script src="/js/pager.js"></script>
-	<script src="/tree/tree-public.js"></script>
-	<script src="/tree/tree.js"></script>
+	<script src="/tree/teacher/tree-public.js"></script>
+	<script src="/tree/teacher/tree.js"></script>
 </body>
 </html>

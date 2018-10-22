@@ -32,7 +32,6 @@ public class TreeService extends BaseService {
 	}
 
 	/**
-	 * ��ȡ����·��
 	 * 
 	 * @param id
 	 * @return
@@ -53,7 +52,7 @@ public class TreeService extends BaseService {
 		} finally {
 			database.closeSession();
 		}
-		list.add("<li><a href=\"javascript:showDirectory('0')\">云盘</a></li>");
+		list.add("<li><a href=\"javascript:showDirectory('0')\">首页</a></li>");
 		StringBuilder navStr = new StringBuilder();
 		if (list.size() > 0) {
 			Collections.reverse(list);
@@ -72,7 +71,6 @@ public class TreeService extends BaseService {
 	 * @return
 	 */
 	public PageData<TreeV> getPage(Integer page, TreeV v) {
-		// ��ѯǰ׼��
 		Map<String, Object> params = new HashMap<String, Object>();
 		if (page == null) {
 			page = 1;
@@ -87,8 +85,14 @@ public class TreeService extends BaseService {
 			if (v.getParentId() != null && !v.getParentId().isEmpty()) {
 				params.put("parentId", v.getParentId().trim());
 			}
+			if (v.getXueqi() != null && !v.getXueqi().isEmpty()) {
+				params.put("xueqi", v.getXueqi().trim());
+			}
+			if (v.getCreator() != null && !v.getCreator().isEmpty()) {
+				params.put("creator", v.getCreator().trim());
+			}
+			
 		}
-		// ��ʼ��ѯ���ݿ�
 		PageData<TreeV> pageData = new PageData<TreeV>();
 		pageData.setPageSize(this.getPageSize());
 		MyBatis database = getDatabase();
@@ -102,7 +106,52 @@ public class TreeService extends BaseService {
 		} finally {
 			database.closeSession();
 		}
-		// ���ش���
+		return pageData;
+	}
+	
+	/**
+	 * 分页
+	 * 
+	 * @param page
+	 * @param v
+	 * @return
+	 */
+	public PageData<TreeV> getStudentPage(Integer page, TreeV v) {
+		Map<String, Object> params = new HashMap<String, Object>();
+		if (page == null) {
+			page = 1;
+		}
+		int begin = (page - 1) * this.getPageSize();
+		params.put("begin", begin);
+		params.put("end", begin + this.getPageSize());
+		if (v != null) {
+			if (v.getMingCheng() != null && !v.getMingCheng().isEmpty()) {
+				params.put("mingCheng", "%" + v.getMingCheng().trim() + "%");
+			}
+			if (v.getParentId() != null && !v.getParentId().isEmpty()) {
+				params.put("parentId", v.getParentId().trim());
+			}
+			if (v.getXueqi() != null && !v.getXueqi().isEmpty()) {
+				params.put("xueqi", v.getXueqi().trim());
+			}
+			if (v.getCreator() != null && !v.getCreator().isEmpty()) {
+				params.put("creator", v.getCreator().trim());
+			}
+		}
+		PageData<TreeV> pageData = new PageData<TreeV>();
+		pageData.setPageSize(this.getPageSize());
+		MyBatis database = getDatabase();
+		SqlSession session = database.openSession();
+		try {
+			TreeMapper mapper = session.getMapper(TreeMapper.class);
+			pageData.setTotal(mapper.selectStudentCount(params));
+			pageData.setData(mapper.selectStudentPage(params));
+		} catch (Exception ex) {
+			System.out.println(ex);
+			this.setMessage("操作异常");
+		} finally {
+			database.closeSession();
+		}
 		return pageData;
 	}
 
@@ -113,7 +162,6 @@ public class TreeService extends BaseService {
 	 * @return
 	 */
 	public Tree get(String id) {
-		// ��ʼ��ѯ���ݿ�
 		Tree entity = null;
 		MyBatis database = getDatabase();
 		SqlSession session = database.openSession();
@@ -121,11 +169,10 @@ public class TreeService extends BaseService {
 			TreeMapper mapper = session.getMapper(TreeMapper.class);
 			entity = mapper.get(id);
 		} catch (Exception ex) {
-			this.setMessage("�����쳣");
+			this.setMessage("操作异常");
 		} finally {
 			database.closeSession();
 		}
-		// ���ش���
 		return entity;
 	}
 

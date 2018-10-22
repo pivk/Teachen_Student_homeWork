@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="doc.system.mapper.CourseMapper">
+	<resultMap id="BaseResultMap" type="doc.system.entity.Course">
+		<id column="ID" jdbcType="VARCHAR" property="id" />
+		<result column="MingCheng" jdbcType="VARCHAR" property="mingCheng" />
+	</resultMap>
+	<resultMap id="ViewResultMap" type="doc.system.view.CourseV">
+		<result column="userId" jdbcType="VARCHAR" property="userId" />
+		<result column="userName" jdbcType="VARCHAR" property="userName" />
+		<result column="courseId" jdbcType="VARCHAR" property="courseId" />
+		<result column="xueqi" jdbcType="VARCHAR" property="xueqi" />
+	</resultMap>
+	<resultMap id="ViewResult" type="doc.system.view.StatisticsV">
+		
+	</resultMap>
+	<!-- 查询 -->
+	<select id="selectAll" parameterType="java.util.Map" resultMap="BaseResultMap">
+		select
+		ID,MingCheng
+		from Sys_Course
+	</select>
+	<select id="selectCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select
+		count(*) as shu
+		from Sys_Course sc left join  sys_user su on sc.userId=su.id
+		where 1=1
+		<if test="mingCheng != null">
+			AND	 sc.mingCheng like #{mingCheng,jdbcType=VARCHAR}
+		</if>
+		<if test="userId != null">
+			AND	 sc.userId = #{userId,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<!-- 分页查询 -->
+	<select id="selectPage" parameterType="java.util.Map" resultMap="ViewResultMap">
+		select
+		sc.*,su.xingming  as userName
+		from Sys_Course sc left join  sys_user su on sc.userId=su.id
+		where 1=1
+		<if test="mingCheng != null">
+			AND	 sc.mingCheng like #{mingCheng,jdbcType=VARCHAR}
+		</if>
+		<if test="userId != null">
+			AND	 sc.userId = #{userId,jdbcType=VARCHAR}
+		</if>
+		limit #{begin}, #{PageSize}
+	</select>
+	<select id="selectUserCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select
+		count(*) as shu
+		from  Sys_Course_User c left  join sys_user u on c.userId=u.id
+		where 1=1
+		<if test="courseId != null">
+			AND	 c.courseId = #{courseId,jdbcType=VARCHAR}
+		</if>
+		<if test="userName != null">
+			AND	 u.XINGMING like #{userName,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<!-- 分页查询 -->
+	<select id="selectUserPage" parameterType="java.util.Map" resultMap="ViewResultMap">
+		select
+		c.*,u.XINGMING as userName
+		from Sys_Course_User c left  join sys_user u on c.userId=u.id
+		where 1=1
+		<if test="courseId != null">
+			AND	 c.courseId = #{courseId,jdbcType=VARCHAR}
+		</if>
+		<if test="userName != null">
+			AND	 u.XINGMING like #{userName,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<!-- 分页查询 -->
+	<select id="dogetStatisticsV"  parameterType="java.util.Map" resultMap="ViewResult">
+		select
+		count(*) as num
+		from Sys_Course_User WHERE 
+		 1=1
+			<if test="courseId != null">
+				AND courseId = #{courseId,jdbcType=VARCHAR}
+			</if>
+		 	AND	 lunwen_score BETWEEN 
+			<if test="end != null">
+				#{end,jdbcType=VARCHAR}
+			 </if>
+	 
+			 	AND
+				<if test="begin != null">
+				#{begin,jdbcType=VARCHAR}
+			 </if>
+	</select>
+	<select id="get" parameterType="java.lang.String" resultMap="BaseResultMap">
+		select
+		*
+		from Sys_Course
+		where ID = #{id,jdbcType=VARCHAR}
+	</select>	
+	<select id="selectUserId" parameterType="java.lang.String" resultType="java.lang.String">
+		select
+		userId
+		from Sys_Course_User 
+		where courseId = #{_parament,jdbcType=VARCHAR}
+	</select>	
+	<insert id="insert" parameterType="doc.system.entity.Course">
+		insert into Sys_Course
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="mingCheng != null">
+				MingCheng,
+			</if>
+			<if test="code != null">
+				code,
+			</if>
+			<if test="userId != null">
+				userId,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="mingCheng != null">
+				#{mingCheng,jdbcType=VARCHAR},
+			</if>
+			<if test="code != null">
+				#{code,jdbcType=VARCHAR},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<insert id="insertUser" parameterType="doc.system.view.CourseV">
+		insert into Sys_Course_User
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				userId,
+			</if>
+			<if test="courseId != null">
+				courseID,
+			</if>
+			<if test="xueqi != null">
+				xueqi,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="userId != null">
+				#{userId,jdbcType=VARCHAR},
+			</if>
+			<if test="courseId != null">
+				#{courseId,jdbcType=VARCHAR},
+			</if>
+			<if test="xueqi != null">
+				#{xueqi,jdbcType=VARCHAR},
+			</if>
+		</trim>
+	</insert>
+	<update id="update" parameterType="doc.system.entity.Course">
+		update Sys_Course
+		<set>
+			<if test="mingCheng != null">
+				MingCheng = #{mingCheng,jdbcType=VARCHAR},
+			</if>
+		</set>
+		where ID = #{id,jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateUSer" parameterType="doc.system.view.CourseV">
+		update Sys_Course_User
+		<set>
+			<if test="late != null">
+				late =late+1,
+			</if>
+			<if test="crunk != null">
+				crunk = crunk+1,
+			</if>
+			<if test="normal != null">
+				normal = normal+1,
+			</if>
+			<if test="lunwenScore != null">
+				lunwen_score =#{lunwenScore,jdbcType=VARCHAR}
+			</if>
+		</set>
+		where courseid = #{courseId,jdbcType=VARCHAR} and userId= #{userId,jdbcType=VARCHAR}
+	</update>
+	<delete id="delete" parameterType="java.lang.String">
+		delete from Sys_Course
+		where ID =
+		#{id,jdbcType=VARCHAR}
+	</delete>	
+</mapper>

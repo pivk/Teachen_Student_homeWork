@@ -2,8 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="doc.file.mapper.DirectoryMapper">
 	<resultMap id="EntityResultMap" type="doc.file.entity.Directory">
-		<id column="ID" jdbcType="VARCHAR" property="id" />
-		<result column="MINGCHENG" jdbcType="VARCHAR" property="mingCheng" />
 	</resultMap>
 	<resultMap id="ViewResult" type="doc.file.view.DirectoryV"
 		extends="EntityResultMap">
@@ -19,17 +17,66 @@
 		<if test="mingCheng != null">
 			AND MingCheng like #{mingCheng,jdbcType=VARCHAR}
 		</if>
+		<if test="xueqi != null">
+			AND xueqi= #{xueqi,jdbcType=VARCHAR}
+		</if>
+		<if test="creator != null">
+			AND creator= #{creator,jdbcType=VARCHAR}
+		</if>
 	</select>
 	<!-- 分页查询 -->
 	<select id="selectPage" parameterType="java.util.Map" resultMap="ViewResult">
-		select *
-		FROM doc_directory
+		select t.* ,(SELECT count(*) from doc_File F  LEFT JOIN doc_directory on doc_directory.id=f.directoryID where f.directoryid= t.id) as countshu,(SELECT count(1) FROM sys_course_user sc LEFT JOIN doc_directory ON sc.courseId=doc_directory.courseId WHERE sc.courseId=t.courseId ) as zong
+		FROM doc_directory t
 		WHERE 1=1
 		<if test="id != null">
 			AND id = #{id,jdbcType=VARCHAR}
 		</if>
 		<if test="mingCheng != null">
 			AND mingcheng like #{mingCheng,jdbcType=VARCHAR}
+		</if>
+		<if test="xueqi != null">
+			AND xueqi= #{xueqi,jdbcType=VARCHAR}
+		</if>
+		<if test="creator != null">
+			AND creator= #{creator,jdbcType=VARCHAR}
+		</if>
+		limit #{begin}, #{PageSize}
+	</select>
+	<select id="selectStudentCount" parameterType="java.util.Map"
+		resultType="java.lang.Integer">
+		select count(*) as shu
+		from doc_directory
+		where 1=1
+		<if test="id != null">
+			AND ID = #{id,jdbcType=VARCHAR}
+		</if>
+		<if test="mingCheng != null">
+			AND MingCheng like #{mingCheng,jdbcType=VARCHAR}
+		</if>
+		<if test="xueqi != null">
+			AND xueqi= #{xueqi,jdbcType=VARCHAR}
+		</if>
+		<if test="creator != null">
+			AND creator= #{creator,jdbcType=VARCHAR}
+		</if>
+	</select>
+	<!-- 分页查询 -->
+	<select id="selectStudentPage" parameterType="java.util.Map" resultMap="ViewResult">
+	select *
+		FROM doc_directory d INNER JOIN  sys_course_user c ON c.courseID=d.courseId 
+		WHERE 1=1
+		<if test="id != null">
+			AND id = #{id,jdbcType=VARCHAR}
+		</if>
+		<if test="mingCheng != null">
+			AND mingcheng like #{mingCheng,jdbcType=VARCHAR}
+		</if>
+		<if test="xueqi != null">
+			AND d.xueqi= #{xueqi,jdbcType=VARCHAR}
+		</if>
+		<if test="creator != null">
+			AND c.userId= #{creator,jdbcType=VARCHAR}
 		</if>
 		limit #{begin}, #{PageSize}
 	</select>
@@ -42,9 +89,15 @@
 	</select>
 	<select id="show" parameterType="java.lang.String" resultMap="ViewResult">
 		select
-		*
-		from doc_directory
-		where id = #{id,jdbcType=VARCHAR}
+		d.*,c.mingCheng as courseName
+		from doc_directory  d left join sys_course c on c.id=d.courseId
+				where d.id = #{id,jdbcType=VARCHAR}
+	</select>
+	<select id="showFile" parameterType="java.util.Map" resultMap="ViewResult">
+		select
+		d.*,c.mingCheng as courseName,f.mingCheng FName,f.realPath,f.originalName
+		from doc_directory  d left join sys_course c on c.id=d.courseId left join doc_file f on f.directoryId=d.id
+		where d.id = #{id,jdbcType=VARCHAR} and f.creator=#{creator,jdbcType=VARCHAR}
 	</select>
 	<delete id="delete" parameterType="java.lang.String">
 		delete from doc_directory
@@ -60,6 +113,22 @@
 			<if test="mingCheng != null">
 				MingCheng,
 			</if>
+			<if test="memo != null">
+				memo,
+			</if>
+			<if test="xueqi != null">
+				xueqi,
+			</if>
+			<if test="endTime != null">
+				endTime,
+			</if>
+			<if test="courseId != null">
+				courseId,
+			</if>
+			<if test="creator != null">
+				creator,
+			</if>
+				createTime,locked,shu
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -68,6 +137,22 @@
 			<if test="mingCheng != null">
 				#{mingCheng,jdbcType=VARCHAR},
 			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="xueqi != null">
+				#{xueqi,jdbcType=VARCHAR},
+			</if>
+			<if test="endTime != null">
+				#{endTime,jdbcType=VARCHAR},
+			</if>
+			<if test="courseId != null">
+				#{courseId,jdbcType=VARCHAR},
+			</if>
+			<if test="creator != null">
+				#{creator,jdbcType=VARCHAR},
+			</if>
+				now(),'否',0
 		</trim>
 	</insert>
 	<update id="update" parameterType="doc.file.entity.Directory">
@@ -76,7 +161,24 @@
 			<if test="mingCheng != null">
 				MingCHeng = #{mingCheng,jdbcType=VARCHAR},
 			</if>
+			<if test="courseId != null">
+				courseId = #{courseId,jdbcType=VARCHAR},
+			</if>
+			<if test="endTime != null">
+				endTime = #{endTime,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				memo = #{memo,jdbcType=VARCHAR},
+			</if>
+			<if test="locked != null">
+				locked = #{locked,jdbcType=VARCHAR},
+			</if>
 		</set>
 		where id = #{id,jdbcType=VARCHAR}
 	</update>
+	<!-- <update id="update" parameterType="doc.file.entity.Directory">
+		update doc_directory
+	   		 shu+=1
+		where id = #{id,jdbcType=VARCHAR}
+	</update> -->
 </mapper>

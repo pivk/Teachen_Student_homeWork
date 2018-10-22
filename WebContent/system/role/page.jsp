@@ -25,10 +25,6 @@
 					<button id="btAdd" type="button" class="am-btn am-btn-primary">
 						<span class="am-icon-plus"></span> 新增
 					</button>
-					<button id="btExport" type="button" class="am-btn am-btn-primary"
-						style="margin-left: 5px">
-						<span class="am-icon-sign-in"></span>导入
-					</button>
 					<div class="am-form-group">
 						<input id="mingCheng" name="mingCheng" type="text"
 							class="am-form-field am-input-sm" placeholder="角色" maxlength="25">

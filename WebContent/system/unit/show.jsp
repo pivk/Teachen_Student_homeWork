@@ -31,17 +31,8 @@
 							<td>${unit.mingCheng }</td>
 						</tr>
 						<tr>
-							<th style="width: 200px">内部号</th>
-							<td>${unit.code }</td>
-						</tr>
-						<tr>
 							<th style="width: 200px">上级单位</th>
 							<td>${unit.parentName }</td>
-						</tr>
-						<tr>
-						   
-						    <th style="width: 200px">类型</th>
-						    <td id="leixingId"></td>
 						</tr>
 						
 					</tbody>
@@ -52,19 +43,6 @@
 	<script src="/js/amazeui/js/amazeui.min.js"></script>
 	<script src="/js/amazeui/js/app.js"></script>
 	<script src="/js/app.js"></script>
-	<script type="text/javascript">
-		$(document).ready(function () {
-			var str=${unit.unitLei };
-			if(str==0){
-				$("#leixingId").text("公司");
-			}
-			if(str==1){
-				$("#leixingId").text("部门");
-			}
-			if(str==2){
-				$("#leixingId").text("项目");
-			}
-		});
-	</script>
+
 </body>
 </html>

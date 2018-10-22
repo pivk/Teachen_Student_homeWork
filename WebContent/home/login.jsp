@@ -21,7 +21,7 @@
 		<div class="container">
 			<img class="pull-left am-fl"
 				src="/images/title.png">
-			<h4 class="pull-left ">师生作业交流系统</h4>
+			<h4 class="pull-left "> 高校课程管理系统</h4>
 		</div>
 	</div>
 	

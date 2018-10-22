@@ -55,7 +55,7 @@ function Remove(uid){
 
 $(document).ready(function () {
 	$("#btAdd").click(function(){
-		parent.openNewTab("添加角色","/system/role/add.action");
+		parent.openTab("1","添加角色","/system/role/add.action");
 	});	
 	$("#btQuery").click(function(){
 		load(1);

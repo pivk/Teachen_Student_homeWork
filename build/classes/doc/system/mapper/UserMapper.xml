@@ -39,7 +39,7 @@
 	<select id="selectCount" parameterType="java.util.Map" resultType="java.lang.Integer">
 		select
 		count(*) as shu
-		from OA_USER
+		from SYS_USER
 		where 1=1
 		<if test="unitId != null">
 			AND UnitID = #{unitId,jdbcType=VARCHAR}
@@ -58,12 +58,16 @@
 	<select id="selectAll" parameterType="java.util.Map" resultMap="ViewResult">
 		select
 		U.ID, XingMing, Mobile, Email, U.Code, Status, UnitID,UT.MingCheng AS UnitName
-		from OA_USER U
-		left join CR_Unit UT on U.UnitID=UT.ID
+		from SYS_USER U
+		left join sys_Unit UT on U.UnitID=UT.ID
 		where 1=1
 		<if test="id != null">
 			AND U.ID = #{id,jdbcType=VARCHAR}
 		</if>
+		<if test="unitId != null">
+			AND UT.ID = #{unitId,jdbcType=VARCHAR}
+		</if>
+
 		<if test="id_not_in!= null">
 			AND U.ID NOT IN(${id_not_in})
 		</if>
@@ -72,8 +76,8 @@
 	<select id="selectPage" parameterType="java.util.Map" resultMap="ViewResult">
 		select
 		U.ID, XingMing, Mobile, Email, U.Code, Status, UnitID,UT.MingCheng AS UnitName
-		from OA_USER U
-		left join CR_Unit UT on U.UnitID=UT.ID
+		from SYS_USER U
+		left join sys_Unit UT on U.UnitID=UT.ID
 		where 1=1
 		<if test="unitId != null">
 			AND UnitID = #{unitId,jdbcType=VARCHAR}
@@ -84,32 +88,57 @@
 		<if test="status != null">
 			AND Status = #{status,jdbcType=VARCHAR}
 		</if>
+		<if test="parentId != null">
+			AND parentId = #{parentId,jdbcType=VARCHAR}
+		</if>
 		<if test="id_not_in!= null">
 			AND U.ID NOT IN(${id_not_in})
 		</if>
+		limit #{begin}, #{PageSize}
+	</select>
+	<select id="doTeacherPageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select
+		count(*) as shu
+		from SYS_USER U left join sys_user_role sur on sur.userID=u.id
+		where 1=1
+		<if test="xingMing != null">
+			AND XingMing like #{xingMing,jdbcType=VARCHAR}
+		</if>
+				AND sur.roleID='180518081202236'
+	</select>	
+	<!-- 分页查询 -->
+	<select id="doTeacherPage" parameterType="java.util.Map" resultMap="ViewResult">
+		select
+		U.*
+		from SYS_USER U left join sys_user_role sur on sur.userID=u.id
+		where 1=1
+		<if test="xingMing != null">
+			AND U.XingMing like #{xingMing,jdbcType=VARCHAR}
+		</if>
+		AND sur.roleID='180518081202236'
 		limit #{begin}, #{PageSize}
 	</select>
 	<!-- 查询单个 -->
 	<select id="get" parameterType="java.lang.String" resultMap="EntityResult">
 		select
 		<include refid="Base_Column_List" />
-		from OA_USER
+		from SYS_USER
 		where ID = #{id,jdbcType=VARCHAR}
 	</select>
 	<select id="show" parameterType="java.lang.String" resultMap="ViewResult">
 		select
 		U.ID, XingMing, Mobile, Email, U.Code, Status, UnitID,UT.MingCheng AS UnitName
-		from OA_USER U
-		left join CR_Unit UT on U.UnitID=UT.ID
+		from SYS_USER U
+		left join sys_Unit UT on U.UnitID=UT.ID
 		where U.ID = #{id,jdbcType=VARCHAR}
 	</select>	
 	<delete id="delete" parameterType="java.lang.String">
-		delete from OA_USER
+		delete from SYS_USER
 		where ID =
 		#{id,jdbcType=VARCHAR}
 	</delete>
 	<insert id="insert" parameterType="doc.system.entity.User">
-		insert into OA_USER
+		insert into SYS_USER
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 			<if test="id != null">
 				ID,
@@ -164,7 +193,7 @@
 		</trim>
 	</insert>
 	<update id="update" parameterType="doc.system.entity.User">
-		update OA_USER
+		update SYS_USER
 		<set>
 			<if test="xingMing != null">
 				XingMing = #{xingMing,jdbcType=VARCHAR},
@@ -185,7 +214,7 @@
 		where ID = #{id,jdbcType=VARCHAR}
 	</update>
 	<update id="updateMima" parameterType="doc.system.entity.User">
-		update OA_USER
+		update SYS_USER
 		<set>
 			<if test="mima != null">
 				MiMA = #{mima,jdbcType=VARCHAR},
@@ -195,18 +224,18 @@
 	</update>
 	<!-- 查询角色 -->
 	<select id="getUserRole" parameterType="java.lang.String" resultMap="BaseRoleResultMap">
-		select cu.ID,cu.XingMing,cr.ID as 'CR_Role.ID',cr.MingCheng from OA_USER cu inner join CR_User_Role cur on cu.ID = cur.UserID inner join CR_Role cr on cur.RoleID = cr.ID where cu.ID = #{id,jdbcType=VARCHAR};
+		select cu.ID,cu.XingMing,cr.ID as 'CR_Role.ID',cr.MingCheng from SYS_USER cu inner join sys_User_Role cur on cu.ID = cur.UserID inner join sys_Role cr on cur.RoleID = cr.ID where cu.ID = #{id,jdbcType=VARCHAR};
 	</select>
 	<delete id="emptyUserRole" parameterType="java.lang.String">
-		delete from CR_User_Role where UserID = #{id,jdbcType=VARCHAR};
+		delete from sys_User_Role where UserID = #{id,jdbcType=VARCHAR};
 	</delete>
 	<insert id="changeUserRole" parameterType="java.util.Map">
-		insert into CR_User_Role (UserID,RoleID) values (#{uId,jdbcType=VARCHAR},#{rId,jdbcType=VARCHAR});
+		insert into sys_User_Role (UserID,RoleID) values (#{uId,jdbcType=VARCHAR},#{rId,jdbcType=VARCHAR});
 	</insert>
 	<select id="login" parameterType="java.util.Map" resultMap="EntityResult">
 		select
 		ID,Code,XingMing,UnitID,Skin
-		from OA_USER
+		from SYS_USER
 		where ID = #{id,jdbcType=VARCHAR} AND MiMa = #{mima,jdbcType=VARCHAR}
 	</select>	
 </mapper>

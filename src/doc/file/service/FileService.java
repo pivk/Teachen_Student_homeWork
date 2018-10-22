@@ -1,7 +1,13 @@
 package doc.file.service;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 
@@ -11,20 +17,89 @@ import doc.file.entity.File;
 import doc.file.mapper.FileMapper;
 import doc.file.mapper.TreeMapper;
 import doc.file.view.FileV;
+import doc.information.mappper.DoorMapper;
 import doc.util.SeqUtil;
 import pushunsoft.common.PageData;
 import pushunsoft.database.MyBatis;
 
 /**
- * ÎÄ¼şÒµÎñÀà
  * 
  * @author jerry
  *
  */
 @Service
 public class FileService extends BaseService {
+
+	
+	
+	
+	
+	
+	
+	 /**
+	  * å‹ç¼©æ–‡ä»¶
+	 * @param id
+	 * @param mingCheng
+	 * @param status 
+	 * @return
+	 */
+	public java.io.File getFiles(String id,String mingCheng){
+		// å¼€å§‹æŸ¥è¯¢æ•°æ®åº“
+		    String targetDir=AppData.Config.getUploadPath()+doc.common.AppData.FILECOMPRESS+java.io.File.separator;
+		    java.io.File dirFile = new java.io.File(targetDir);
+			if (!dirFile.exists()) {
+				dirFile.mkdirs();
+			}
+		    java.io.File file=new java.io.File(targetDir+mingCheng+".zip");
+		    MyBatis database = getDatabase();
+			SqlSession session = database.openSession();
+			try {
+				FileMapper mapper = session.getMapper(FileMapper.class);
+				String[] ids=id.split(",");
+				Map<String, Object> params = new HashMap<String, Object>();
+				params.put("ids", ids);
+				List<File> list=mapper.showFile(params);
+				String[] str=new String[list.size()];
+				java.io.File [] files=new java.io.File[list.size()];
+				for(int i=0;i<list.size();i++){
+					//String realPath = AppData.Config.getUploadPath() + list.get(i).getRealPath();
+					str[i]=list.get(i).getMingCheng();
+					//java.io.File fileOne=new java.io.File(realPath);
+					files[i] =new java.io.File(AppData.Config.getUploadPath() +list.get(i).getRealPath());
+				}
+				zipFiles(files,file,str);	
+			} catch (Exception ex) {	
+				this.setMessage("æ“ä½œå¤±è´¥");
+			} finally {
+				database.closeSession();
+			}
+			// è¿”å›å¤„ç†
+		 return file;
+		 
+	 }
+	
+	public  void zipFiles(java.io.File[] srcfile,java.io.File zipfile,String[] str){
+	    byte[] buf=new byte[1024];
+	    try {
+	      //ZipOutputStreamç±»ï¼šå®Œæˆæ–‡ä»¶æˆ–æ–‡ä»¶å¤¹çš„å‹ç¼©
+	      ZipOutputStream out=new ZipOutputStream(new FileOutputStream(zipfile));
+	      for(int i=0;i<srcfile.length;i++){
+	        FileInputStream in=new FileInputStream(srcfile[i]);
+	        out.putNextEntry(new ZipEntry(str[i]));
+	        int len;
+	        while((len=in.read(buf))>0){
+	          out.write(buf,0,len);
+	        }
+	        out.closeEntry();
+	        in.close();
+	      }
+	      out.close();
+	   
+	    } catch (Exception e) {
+	    	this.setMessage("æ“ä½œå¤±è´¥");
+	    }
+	  }	
 	/**
-	 * Éú³ÉID
 	 * 
 	 * @return
 	 */
@@ -34,7 +109,6 @@ public class FileService extends BaseService {
 	}
 
 	/**
-	 * Éú³ÉĞÂÎÄ¼şÃû
 	 * 
 	 * @return
 	 */
@@ -43,7 +117,6 @@ public class FileService extends BaseService {
 	}
 
 	/**
-	 * ÌáÈ¡ÎÄ¼şÀàĞÍ
 	 * 
 	 * @param fileName
 	 * @return
@@ -60,14 +133,52 @@ public class FileService extends BaseService {
 	}
 
 	/**
-	 * ·ÖÒ³²éÑ¯
 	 * 
 	 * @param page
 	 * @param v
 	 * @return
 	 */
 	public PageData<FileV> getPage(Integer page, FileV v) {
-		// ²éÑ¯Ç°×¼±¸
+		Map<String, Object> params = new HashMap<String, Object>();
+		if (page == null) {
+			page = 1;
+		}
+		int begin = (page - 1) * this.getPageSize();
+		params.put("begin", begin);
+		params.put("PageSize", this.getPageSize());
+		if (v != null) {
+			if (v.getMingCheng() != null && !v.getMingCheng().isEmpty()) {
+				params.put("mingCheng", "%" + v.getMingCheng().trim() + "%");
+			}
+			if (v.getUnitId() != null && !v.getUnitId().isEmpty()) {
+				params.put("unitId",  v.getUnitId().trim() );
+			}
+			if (v.getDirectoryId() != null && !v.getDirectoryId().isEmpty()) {
+				params.put("directoryId",   v.getDirectoryId().trim());
+			}
+		}
+		PageData<FileV> pageData = new PageData<FileV>();
+		pageData.setPageSize(this.getPageSize());
+		MyBatis database = getDatabase();
+		SqlSession session = database.openSession();
+		try {
+			FileMapper mapper = session.getMapper(FileMapper.class);
+			pageData.setTotal(mapper.selectCount(params));
+			pageData.setData(mapper.selectPage(params));
+		} catch (Exception ex) {
+			this.setMessage("æ•°æ®å¼‚å¸¸");
+		} finally {
+			database.closeSession();
+		}
+		return pageData;
+	}
+	/**
+	 * 
+	 * @param page
+	 * @param v
+	 * @return
+	 */
+	public PageData<FileV> getstudentPage(Integer page, FileV v) {
 		Map<String, Object> params = new HashMap<String, Object>();
 		if (page == null) {
 			page = 1;
@@ -80,7 +191,6 @@ public class FileService extends BaseService {
 				params.put("mingCheng", "%" + v.getMingCheng().trim() + "%");
 			}
 		}
-		// ¿ªÊ¼²éÑ¯Êı¾İ¿â
 		PageData<FileV> pageData = new PageData<FileV>();
 		pageData.setPageSize(this.getPageSize());
 		MyBatis database = getDatabase();
@@ -90,22 +200,19 @@ public class FileService extends BaseService {
 			pageData.setTotal(mapper.selectCount(params));
 			pageData.setData(mapper.selectPage(params));
 		} catch (Exception ex) {
-			this.setMessage("²Ù×÷Ê§°Ü");
+			this.setMessage("æ•°æ®å¼‚å¸¸");
 		} finally {
 			database.closeSession();
 		}
-		// ·µ»Ø´¦Àí
 		return pageData;
 	}
 
 	/**
-	 * »ñÈ¡Ò»¸ö
 	 * 
 	 * @param id
 	 * @return
 	 */
 	public File get(String id) {
-		// ¿ªÊ¼²éÑ¯Êı¾İ¿â
 		File parameter = null;
 		MyBatis database = getDatabase();
 		SqlSession session = database.openSession();
@@ -113,22 +220,19 @@ public class FileService extends BaseService {
 			FileMapper mapper = session.getMapper(FileMapper.class);
 			parameter = mapper.get(id);
 		} catch (Exception ex) {
-			this.setMessage("²Ù×÷Ê§°Ü");
+			this.setMessage("ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½");
 		} finally {
 			database.closeSession();
 		}
-		// ·µ»Ø´¦Àí
 		return parameter;
 	}
 
 	/**
-	 * »ñÈ¡Ò»¸ö
 	 * 
 	 * @param id
 	 * @return
 	 */
 	public FileV show(String id) {
-		// ¿ªÊ¼²éÑ¯Êı¾İ¿â
 		FileV parameter = null;
 		MyBatis database = getDatabase();
 		SqlSession session = database.openSession();
@@ -136,105 +240,105 @@ public class FileService extends BaseService {
 			FileMapper mapper = session.getMapper(FileMapper.class);
 			parameter = mapper.show(id);
 		} catch (Exception ex) {
-			this.setMessage("²Ù×÷Ê§°Ü");
+			this.setMessage("ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½");
 		} finally {
 			database.closeSession();
 		}
-		// ·µ»Ø´¦Àí
 		return parameter;
 	}
 
 	/**
-	 * Ìí¼Ó
 	 * 
+	 * @param entity
+	 * @return
+	 */
+	/**
 	 * @param entity
 	 * @return
 	 */
 	public boolean add(File entity) {
 		if (entity == null) {
-			this.setMessage("Êı¾İÎª¿Õ");
+			this.setMessage("æ•°æ®ä¸ºç©º");
 			return false;
 		}
 		entity.setId(getId());
 		entity.setLei(AppData.Tree_Type_File);
 		boolean result = false;
-		// ¿ªÊ¼Ö´ĞĞÊı¾İ¿â
 		MyBatis database = getDatabase();
 		SqlSession session = database.openSession();
 		try {
-			TreeMapper treeMapper = session.getMapper(TreeMapper.class);
+			/*TreeMapper treeMapper = session.getMapper(TreeMapper.class);
 			result = treeMapper.insert(entity);
 			if (!result) {
 				session.rollback();
-				this.setMessage("²Ù×÷Ê÷Ê§°Ü");
+				this.setMessage("æ•°æ®é”™è¯¯");
 				return false;
 			}
+			Directory directory=new Directory();
+			directory.setUserId(entity.getCreator());
+			directory.setId(entity.getId());
+			result = treeMapper.insertTree(directory);*/
 			FileMapper FileMapper = session.getMapper(FileMapper.class);
 			result = FileMapper.insert(entity);
-			if (!result) {
+			if (result) {
+				session.commit();
+			}else{
 				session.rollback();
-				this.setMessage("²Ù×÷Ä¿Â¼Ê§°Ü");
+				this.setMessage("æ“ä½œå¤±è´¥");
 				return false;
 			}
-			// ÕæÕıÈë¿â
-			session.commit();
+			
+			
 		} catch (Exception ex) {
 			session.rollback();
-			this.setMessage("²Ù×÷Òì³£");
+			this.setMessage("æ“ä½œå¤±è´¥");
 			result = false;
 		} finally {
 			database.closeSession();
 		}
-		// ·µ»Ø´¦Àí
 		return result;
 	}
 
 	/**
-	 * ĞŞ¸Ä
 	 * 
 	 * @param user
 	 * @return
 	 */
 	public boolean edit(File entity) {
 		if (entity == null) {
-			this.setMessage("Êı¾İÎª¿Õ");
+			this.setMessage("æ•°æ®ä¸ºç©º");
 			return false;
 		}
 		boolean result = false;
-		// ¿ªÊ¼Ö´ĞĞÊı¾İ¿â
 		MyBatis database = getDatabase();
 		SqlSession session = database.openSession();
 		try {
 			FileMapper mapper = session.getMapper(FileMapper.class);
 			result = mapper.update(entity);
 			if (result) {
-				// ÕæÕıÈë¿â
 				session.commit();
 			}
 		} catch (Exception ex) {
 			session.rollback();
-			this.setMessage("²Ù×÷Ê§°Ü");
+			this.setMessage("æ›´æ–°å¼‚å¸¸");
 			result = false;
 		} finally {
 			database.closeSession();
 		}
-		// ·µ»Ø´¦Àí
 		return result;
 	}
 
 	/**
-	 * É¾³ı
 	 * 
 	 * @param id
 	 * @return
 	 */
 	public boolean remove(String id) {
 		if (id == null) {
-			this.setMessage("Êı¾İÎª¿Õ");
+			this.setMessage("æ•°æ®ä¸ºç©º");
 			return false;
 		}
 		boolean result = false;
-		// ¿ªÊ¼Ö´ĞĞÊı¾İ¿â
 		MyBatis database = getDatabase();
 		SqlSession session = database.openSession();
 		try {
@@ -242,26 +346,24 @@ public class FileService extends BaseService {
 			result = treeMapper.delete(id);
 			if (!result) {
 				session.rollback();
-				this.setMessage("²Ù×÷Ê÷Ê§°Ü");
+				this.setMessage("åˆ é™¤é”™è¯¯");
 				return false;
 			}
 			FileMapper mapper = session.getMapper(FileMapper.class);
 			result = mapper.delete(id);
 			if (!result) {
 				session.rollback();
-				this.setMessage("²Ù×÷ÎÄ¼şÊ§°Ü");
+				this.setMessage("åˆ é™¤é”™è¯¯");
 				return false;
 			}
-			// ÕæÕıÈë¿â
 			session.commit();
 		} catch (Exception ex) {
 			session.rollback();
-			this.setMessage("²Ù×÷Òì³£");
+			this.setMessage("åˆ é™¤é”™è¯¯");
 			result = false;
 		} finally {
 			database.closeSession();
 		}
-		// ·µ»Ø´¦Àí
 		return result;
 	}
 }

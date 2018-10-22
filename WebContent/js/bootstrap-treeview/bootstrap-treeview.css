@@ -27,10 +27,12 @@
 }
 
 .treeview span.icon {
-	width: 12px;
+	width: 20px;
 	margin-right: 5px;
 }
-
+.treeview span.node-icon {
+	margin-bottom: -4px;
+}
 .treeview .node-disabled {
 	color: silver;
 	cursor: not-allowed;

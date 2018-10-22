@@ -63,4 +63,10 @@ public interface DirectoryMapper {
 	 * @return
 	 */
 	boolean delete(String id);
+
+	int selectStudentCount(Map<String, Object> params);
+
+	List<DirectoryV> selectStudentPage(Map<String, Object> params);
+
+	DirectoryV showFile(DirectoryV v);
 }

@@ -5,6 +5,7 @@ import java.util.Map;
 
 import doc.file.entity.File;
 import doc.file.view.FileV;
+import doc.system.view.StatisticsV;
 
 /**
  * Ŀ¼
@@ -63,4 +64,8 @@ public interface FileMapper {
 	 * @return
 	 */
 	boolean delete(String id);
+
+	List<File> showFile(Map<String, Object> params);
+	StatisticsV dogetStatisticsV(Map<String, Object> params);
+
 }

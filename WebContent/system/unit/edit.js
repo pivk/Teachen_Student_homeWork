@@ -4,6 +4,7 @@ function save() {
 	$.post("/system/unit/doEdit.action", $("#form").serialize(), function(data) {
 		if (data.state==true) {
 			$("#message").text("操作成功");
+			parent.location.reload();
 		} else {
 			$("#message").text("操作失败："+data);
 		}
@@ -21,7 +22,6 @@ function load() {
 		$("#code").val(data.data.code);
 		$("#unitId").val(data.data.parentId);		
 		$("#parentName").val(data.data.parentName);
-		$("#unitLei").val(data.data.unitLei);
 	});
 }
 

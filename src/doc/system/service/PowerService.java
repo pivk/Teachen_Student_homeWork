@@ -1,20 +1,24 @@
 package doc.system.service;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 
 import doc.common.BaseService;
+import doc.home.view.Menu;
 import doc.system.entity.Power;
 import doc.system.entity.RolePower;
 import doc.system.mapper.PowerMapper;
 import doc.system.view.PowerTree;
 import doc.system.view.PowerV;
 import pushunsoft.database.MyBatis;
+
 /**
- * 权限业务类
+ * 鏉冮檺涓氬姟绫?
  * 
  * @author jerry
  *
@@ -22,14 +26,14 @@ import pushunsoft.database.MyBatis;
 @Service
 public class PowerService extends BaseService {
 	/**
-	 * 获取所有权限
+	 * 鑾峰彇鎵?鏈夋潈闄?
 	 * 
 	 * @return
 	 */
 	public List<PowerV> getAll() {
-		// 查询前准备
+		// 鏌ヨ鍓嶅噯澶?
 		Map<String, Object> params = new HashMap<String, Object>();
-		// 开始查询数据库
+		// 鏁版嵁搴撴墽琛?
 		List<PowerV> list = null;
 		MyBatis database = getDatabase();
 		SqlSession session = database.openSession();
@@ -37,21 +41,22 @@ public class PowerService extends BaseService {
 			PowerMapper mapper = session.getMapper(PowerMapper.class);
 			list = mapper.selectAll(params);
 		} catch (Exception ex) {
-			this.setMessage("操作失败");
+			this.setMessage("鎿嶄綔澶辫触");
 		} finally {
 			database.closeSession();
 		}
-		// 返回处理
+		// 杩斿洖缁撴灉
 		return list;
 	}
+
 	/**
-	 * 查询角色权限
+	 * 鏌ヨ鐢ㄦ埛鏉冮檺
 	 * 
 	 * @param roleId
 	 * @return
 	 */
 	public List<PowerV> selectUserPower(String userId) {
-		// 开始查询数据库
+		// 寮?濮嬫煡璇㈡暟鎹簱
 		List<PowerV> list = null;
 		MyBatis database = getDatabase();
 		SqlSession session = database.openSession();
@@ -59,21 +64,22 @@ public class PowerService extends BaseService {
 			PowerMapper mapper = session.getMapper(PowerMapper.class);
 			list = mapper.selectUserPower(userId);
 		} catch (Exception ex) {
-			this.setMessage("操作失败");
+			this.setMessage("鎿嶄綔澶辫触");
 		} finally {
 			database.closeSession();
 		}
-		// 返回处理
+		// 杩斿洖缁撴灉
 		return list;
 	}
+
 	/**
-	 * 查询角色权限
+	 * 鏌ヨ瑙掕壊鏉冮檺
 	 * 
 	 * @param roleId
 	 * @return
 	 */
 	public List<PowerV> getRolePower(String roleId) {
-		// 开始查询数据库
+		// 寮?濮嬫煡璇㈡暟鎹簱
 		List<PowerV> list = null;
 		MyBatis database = getDatabase();
 		SqlSession session = database.openSession();
@@ -81,53 +87,53 @@ public class PowerService extends BaseService {
 			PowerMapper mapper = session.getMapper(PowerMapper.class);
 			list = mapper.selectRolePower(roleId);
 		} catch (Exception ex) {
-			this.setMessage("操作失败");
+			this.setMessage("鎿嶄綔澶辫触");
 		} finally {
 			database.closeSession();
 		}
-		// 返回处理
+		// 杩斿洖缁撴灉
 		return list;
 	}
+	public List<PowerV> getOffice(String userId) {
+		// 寮?濮嬫煡璇㈡暟鎹簱
+		List<PowerV> list = null;
+		MyBatis database = getDatabase();
+		SqlSession session = database.openSession();
+		try {
+			PowerMapper mapper = session.getMapper(PowerMapper.class);
+			list = mapper.selectOffice(userId);
+		} catch (Exception ex) {
+			this.setMessage("鎿嶄綔澶辫触");
+		} finally {
+			database.closeSession();
+		}
+		// 杩斿洖缁撴灉
+		return list;
+	}
+
 	/**
-	 * 保存角色权限
+	 * 淇濆瓨瑙掕壊鏉冮檺
 	 * 
 	 * @param roleId
 	 * @param powerList
 	 * @return
 	 */
 	public boolean saveRolePower(String roleId, List<Power> powerList) {
-		// 开始查询数据库
+		// 寮?濮嬫煡璇㈡暟鎹簱
 		boolean result = false;
 		MyBatis database = getDatabase();
 		SqlSession session = database.openSession();
 		try {
 			PowerMapper mapper = session.getMapper(PowerMapper.class);
-			List<PowerV> allPowerList = mapper.selectAll(null);
 			List<RolePower> toDoList = new ArrayList<RolePower>();
-			for (Power power : powerList) {
-				RolePower rp = new RolePower();
-				rp.setPowerId(power.getId());
-				rp.setRoleId(roleId);
-				toDoList.add(rp);
-				// 获取上级权限
-				for (PowerV powerV : allPowerList) {
-					if (powerV.getId() == null) {
-						continue;
-					}
-					if ("Y".equals(powerV.getLeaf())) {
-						powerV.setId(null);// 没用了，不要再比较了
-						continue;
-					}
-					if (power.getId().startsWith(powerV.getId())) {
-						rp = new RolePower();
-						rp.setPowerId(powerV.getId());
-						rp.setRoleId(roleId);
-						toDoList.add(rp);
-						powerV.setId(null);// 已经比较了，就不要再比较了
-					}
+			if (powerList != null && powerList.size() > 0) {
+				for (Power power : powerList) {
+					RolePower rolePower = new RolePower();
+					rolePower.setRoleId(roleId);
+					rolePower.setPowerId(power.getId());
+					toDoList.add(rolePower);
 				}
 			}
-			// 更新
 			result = mapper.deleteRolePower(roleId);
 			for (RolePower power : toDoList) {
 				result = mapper.insertRolePower(power);
@@ -136,21 +142,52 @@ public class PowerService extends BaseService {
 				session.commit();
 			}
 		} catch (Exception ex) {
-			this.setMessage("操作失败");
+			this.setMessage("鎿嶄綔澶辫触");
 		} finally {
 			database.closeSession();
 		}
-		// 返回处理
+		// 杩斿洖缁撴灉
 		return result;
 	}
+	/*public boolean saveOffice(String userId, List<Power> powerList) {
+		// 寮?濮嬫煡璇㈡暟鎹簱
+		boolean result = false;
+		MyBatis database = getDatabase();
+		SqlSession session = database.openSession();
+		try {
+			PowerMapper mapper = session.getMapper(PowerMapper.class);
+			List<RolePower> toDoList = new ArrayList<RolePower>();
+			if (powerList != null && powerList.size() > 0) {
+				for (Power power : powerList) {
+					RolePower rolePower = new RolePower();
+					rolePower.setRoleId(userId);
+					rolePower.setPowerId(power.getId());
+					toDoList.add(rolePower);
+				}
+			}
+			result = mapper.deleteOffice(userId);
+			for (RolePower power : toDoList) {
+				result = mapper.insertOffice(power);
+			}
+			if (result) {
+				session.commit();
+			}
+		} catch (Exception ex) {
+			this.setMessage("鎿嶄綔澶辫触");
+		} finally {
+			database.closeSession();
+		}
+		// 杩斿洖缁撴灉
+		return result;
+	}*/
 	/**
-	 * 查询用户权限
+	 * 鏌ョ湅鐢ㄦ埛鏉冮檺
 	 * 
 	 * @param roleId
 	 * @return
 	 */
 	public List<PowerV> getUserPower(String userId) {
-		// 开始查询数据库
+		// 鎵ц鏁版嵁搴?
 		List<PowerV> list = null;
 		MyBatis database = getDatabase();
 		SqlSession session = database.openSession();
@@ -158,15 +195,16 @@ public class PowerService extends BaseService {
 			PowerMapper mapper = session.getMapper(PowerMapper.class);
 			list = mapper.selectUserPower(userId);
 		} catch (Exception ex) {
-			this.setMessage("操作失败");
+			this.setMessage("鎿嶄綔澶辫触");
 		} finally {
 			database.closeSession();
 		}
-		// 返回处理
+		// 杩斿洖缁撴灉
 		return list;
 	}
+
 	/**
-	 * 创建多级树
+	 * 鍒涘缓澶氱骇鏍?
 	 * 
 	 * @param powerList
 	 * @param node
@@ -186,8 +224,9 @@ public class PowerService extends BaseService {
 			}
 		}
 	}
+
 	/**
-	 * 获取权限树
+	 * 鑾峰彇鏉冮檺鏍?
 	 * 
 	 * @return
 	 */
@@ -195,41 +234,151 @@ public class PowerService extends BaseService {
 		List<PowerV> list = getAll();
 		PowerTree tree = new PowerTree();
 		tree.setId("0");
-		tree.setMingCheng("根");
+		tree.setMingCheng("鏉冮檺");
 		CreateTree(list, tree);
 		return tree;
 	}
+
 	/**
-	 * 创建二级树，忽略中间节点
+	 * 閫掑綊鐢熸垚鏉冮檺鏍?
 	 * 
+	 * @param powerList
+	 * @param menu
 	 */
-	public PowerTree getTree2() {
-		List<PowerV> powerList = getAll();
-		PowerTree tree = new PowerTree();
-		tree.setId("0");
-		tree.setMingCheng("根");
-		tree.setNodes(new ArrayList<PowerTree>());
+	private void CreateMenu(List<PowerV> powerList, Menu menu) {
 		for (Power power : powerList) {
-			if (power.getUpId().equals(tree.getId())) {
-				PowerTree subNode = new PowerTree();
-				subNode.setId(power.getId());
-				subNode.setMingCheng(power.getMingCheng());
-				subNode.setLink(power.getLink());
-				tree.getNodes().add(subNode);
-				for (Power power2 : powerList) {
-					if (power2.getUpId().startsWith(subNode.getId()) && "Y".equals(power2.getLeaf())) {
-						if (subNode.getNodes() == null) {
-							subNode.setNodes(new ArrayList<PowerTree>());
-						}
-						PowerTree subNode2 = new PowerTree();
-						subNode2.setId(power2.getId());
-						subNode2.setMingCheng(power2.getMingCheng());
-						subNode2.setLink(power2.getLink());
-						subNode.getNodes().add(subNode2);
-					}
+			if (power.getUpId().equals(menu.getId())) {
+				if (menu.getNodes() == null) {
+					menu.setNodes(new ArrayList<Menu>());
 				}
+				Menu subMenu = new Menu();
+				subMenu.setId(power.getId());
+				subMenu.setText(power.getMingCheng());
+				subMenu.setUrl(power.getLink());
+				menu.getNodes().add(subMenu);
+				CreateMenu(powerList, subMenu);
 			}
 		}
-		return tree;
+	}
+
+	/**
+	 * 鍒涘缓鑿滃崟鏍戯紝閫傜敤treeview鎺т欢
+	 * 
+	 * @return
+	 */
+	public List<Menu> MakeMenu() {
+		List<PowerV> powerList = null;
+		MyBatis database = getDatabase();
+		SqlSession session = database.openSession();
+		try {
+			PowerMapper mapper = session.getMapper(PowerMapper.class);
+
+			powerList = mapper.selectAll(null);
+
+		} catch (Exception ex) {
+			this.setMessage("璇诲彇鏉冮檺寮傚父");
+		} finally {
+			database.closeSession();
+		}
+
+		if (powerList == null || powerList.size() == 0)
+			return null;
+
+		// 寮?濮嬫瀯寤烘爲
+		List<Menu> menuList = new ArrayList<Menu>();
+		for (PowerV power : powerList) {
+			if (!power.getUpId().equals("0"))
+				continue;
+			Menu menu = new Menu();
+			menu.setId(power.getId());
+			menu.setText(power.getMingCheng());
+			menu.setUrl(power.getLink());
+			menuList.add(menu);
+			CreateMenu(powerList, menu);
+		}
+		return menuList;
+	}
+	/**
+	 * 鍒涘缓鑿滃崟鏍戯紝閫傜敤treeview鎺т欢
+	 * 
+	 * @return
+	 */
+	public List<Menu> MakeUserMenu(String userId) {
+		List<PowerV> powerList = null;
+		MyBatis database = getDatabase();
+		SqlSession session = database.openSession();
+		try {
+			PowerMapper mapper = session.getMapper(PowerMapper.class);
+			powerList = mapper.selectUserPower(userId);
+		} catch (Exception ex) {
+			this.setMessage("璇诲彇鏉冮檺寮傚父");
+		} finally {
+			database.closeSession();
+		}
+
+		if (powerList == null || powerList.size() == 0)
+			return null;
+
+		// 寮?濮嬫瀯寤烘爲
+		List<Menu> menuList = new ArrayList<Menu>();
+		for (PowerV power : powerList) {
+			if (!power.getUpId().equals("0"))
+				continue;
+			Menu menu = new Menu();
+			menu.setId(power.getId());
+			menu.setText(power.getMingCheng());
+			menu.setUrl(power.getLink());
+			menuList.add(menu);
+			CreateMenu(powerList, menu);
+		}
+		return menuList;
+	}
+	public List<Menu> MakeOfficeMenu(String userId) {
+		List<PowerV> powerList = null;
+		MyBatis database = getDatabase();
+		SqlSession session = database.openSession();
+		try {
+			PowerMapper mapper = session.getMapper(PowerMapper.class);
+			powerList = mapper.selectOffice(userId);
+		} catch (Exception ex) {
+			this.setMessage("璇诲彇鏉冮檺寮傚父");
+		} finally {
+			database.closeSession();
+		}
+
+		if (powerList == null || powerList.size() == 0)
+			return null;
+
+		// 寮?濮嬫瀯寤烘爲
+		List<Menu> menuList = new ArrayList<Menu>();
+		Menu menum = new Menu();
+		menum.setId("rcbg");
+		menum.setText("鏃ュ父鍔炲叕");
+		menum.setUrl("#");
+		menum.setIcon("oa-icon oa-icon-gongzuotai");
+		List<Menu> nodes = new ArrayList<Menu>();
+		Menu menu1 = new Menu();
+		menu1.setId("index");
+		menu1.setText("棣栭〉");
+		menu1.setUrl("/");
+		menu1.setIcon("oa-icon oa-icon-home");
+		nodes.add(menu1);
+		Menu menu2 = new Menu();
+		menu2.setId("powerOffice");
+		menu2.setText("鑷畾涔?");
+		menu2.setUrl("/system/power/power.action");
+		menu2.setIcon("oa-icon oa-icon-flow-todo");
+		nodes.add(menu2);
+		for (PowerV power : powerList) {
+			Menu menu = new Menu();
+			menu.setId(power.getId());
+			menu.setText(power.getMingCheng());
+			menu.setUrl(power.getLink());
+/*			menu.setIcon(power.getLei());
+*/			nodes.add(menu);
+		}
+		menum.setNodes(nodes);
+		menuList.add(menum);
+		return menuList;
 	}
 }

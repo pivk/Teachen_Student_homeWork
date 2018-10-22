@@ -7,31 +7,77 @@
 	</resultMap>
 	<resultMap id="ViewResult" type="doc.file.view.FileV"
 		extends="EntityResultMap">
+				<result column="originalName" jdbcType="VARCHAR" property="originalName" />
+		
+	</resultMap>
+	<resultMap id="ViewResults" type="doc.system.view.StatisticsV">
+		
 	</resultMap>
 	<select id="selectCount" parameterType="java.util.Map"
 		resultType="java.lang.Integer">
-		select count(*) as shu
-		from doc_File
-		where 1=1
-		<if test="id != null">
-			AND ID = #{id,jdbcType=VARCHAR}
-		</if>
+			SELECT count(*) from doc_File F
+		LEFT JOIN sys_user u on u.id=f.creator
+		WHERE 1=1
 		<if test="mingCheng != null">
-			AND MingCheng like #{mingCheng,jdbcType=VARCHAR}
+			AND F.mingcheng like #{mingCheng,jdbcType=VARCHAR}
+		</if>
+		<if test="directoryId != null">
+			AND F.directoryId = #{directoryId,jdbcType=VARCHAR}
+		</if>
+		<if test="unitId != null">
+			AND u.unitId = #{unitId,jdbcType=VARCHAR}
 		</if>
 	</select>
 	<!-- 分页查询 -->
 	<select id="selectPage" parameterType="java.util.Map" resultMap="ViewResult">
-		SELECT T.*,F.GESHI from doc_File F
-		LEFT JOIN doc_tree T ON F.ID=T.ID
+		SELECT f.* ,u.xingMIng as Fname from doc_File F
+		LEFT JOIN sys_user u on u.id=f.creator  
 		WHERE 1=1
-		<if test="id != null">
-			AND T.id = #{id,jdbcType=VARCHAR}
-		</if>
 		<if test="mingCheng != null">
-			AND T.mingcheng like #{mingCheng,jdbcType=VARCHAR}
+			AND F.mingcheng like #{mingCheng,jdbcType=VARCHAR}
+		</if>
+		<if test="directoryId != null">
+			AND F.directoryId = #{directoryId,jdbcType=VARCHAR}
+		</if>
+		<if test="unitId != null">
+			AND u.unitId = #{unitId,jdbcType=VARCHAR}
 		</if>
 		limit #{begin}, #{PageSize}
+	</select>
+	
+	<!-- 分页查询 -->
+	<select id="showFile" parameterType="java.util.Map" resultMap="ViewResult">
+		SELECT f.* from doc_File F
+		LEFT JOIN sys_user u on u.id=f.creator
+		WHERE 1=1
+		<if test="mingCheng != null">
+			AND F.mingcheng like #{mingCheng,jdbcType=VARCHAR}
+		</if>
+			<if test="ids != null">
+				AND f.id in 
+				    <foreach item="item" index="index" collection="ids" open="(" separator="," close=")">
+				        #{item}
+				    </foreach>
+			</if>
+
+	</select>
+		<!-- 分页查询 -->
+	<select id="dogetStatisticsV"  parameterType="java.util.Map" resultMap="ViewResults">
+		select
+		count(*) as num
+		from doc_File WHERE 
+		 1=1
+			<if test="directoryId != null">
+				AND directoryId = #{directoryId,jdbcType=VARCHAR}
+			</if>
+		 	AND	 score BETWEEN 
+			<if test="end != null">
+				#{end,jdbcType=VARCHAR}
+			 </if>
+			 	AND
+			<if test="begin != null">
+				#{begin,jdbcType=VARCHAR}
+			 </if>
 	</select>
 	<!-- 查询单个 -->
 	<select id="get" parameterType="java.lang.String" resultMap="EntityResultMap">
@@ -61,6 +107,21 @@
 			<if test="geShi != null">
 				geShi,
 			</if>			
+			<if test="realPath != null">
+				realPath,
+			</if>			
+			<if test="directoryId != null">
+				directoryId,
+			</if>			
+			<if test="creator != null">
+				creator,
+			</if>			
+			<if test="size != null">
+				size,
+			</if>			
+			<if test="originalName != null">
+				originalName,
+			</if>			
 		</trim>
 		<trim prefix="values (" suffix=")" suffixOverrides=",">
 			<if test="id != null">
@@ -71,6 +132,21 @@
 			</if>
 			<if test="geShi != null">
 				#{geShi,jdbcType=VARCHAR},
+			</if>	
+			<if test="realPath != null">
+				#{realPath,jdbcType=VARCHAR},
+			</if>			
+			<if test="directoryId != null">
+				#{directoryId,jdbcType=VARCHAR},
+			</if>			
+			<if test="creator != null">
+				#{creator,jdbcType=VARCHAR},
+			</if>			
+			<if test="size != null">
+				#{size,jdbcType=VARCHAR},
+			</if>			
+			<if test="originalName != null">
+				#{originalName,jdbcType=VARCHAR},
 			</if>			
 		</trim>
 	</insert>
@@ -82,6 +158,9 @@
 			</if>
 			<if test="geShi != null">
 				geShi = #{mingCheng,jdbcType=VARCHAR},
+			</if>			
+			<if test="score != null">
+				score = #{score,jdbcType=VARCHAR},
 			</if>			
 		</set>
 		where id = #{id,jdbcType=VARCHAR}

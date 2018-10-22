@@ -7,7 +7,8 @@ $(document).ready(function() {
 	});
 	$("#btCreateDirectory").click(function() {
 		var parentId=$("#parentId").val();
-		createDirectory(parentId);
+		var xueqi=$("#xueqi").val();
+		createDirectory(parentId,xueqi);
 	});
 	$("#btCreateFile").click(function() {
 		var parentId=$("#parentId").val();

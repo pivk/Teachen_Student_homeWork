@@ -31,13 +31,7 @@
 								class="am-input-sm"  >
 						</div>											
 					</div>
-					<div class="am-g am-margin-top">
-						<div class="am-u-sm-4 am-u-md-2 am-text-right">内部号</div>
-						<div class="am-u-sm-8 am-u-md-4 am-u-end col-end">
-							<input id="code" name="code" type="text" maxlength="20"
-								class="am-input-sm"  >
-						</div>						
-					</div>
+				
 					<div class="am-g am-margin-top">
 						<div class="am-u-sm-4 am-u-md-2 am-text-right">上级单位</div>
 						<div class="am-u-sm-8 am-u-md-4 am-u-end col-end">

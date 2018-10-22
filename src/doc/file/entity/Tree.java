@@ -10,7 +10,40 @@ public class Tree {
 	private String realPath;
 	private String secret;
 	private String memo;
-	
+	private String creator;
+	private String xueqi;
+	private String userId;
+	private String endTime;
+	private String createTime;
+	private String locked;
+	private String courseId;
+ 
+
+	public String getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
+	}
+
+
+	public String getCreator() {
+		return creator;
+	}
+
+	public void setCreator(String creator) {
+		this.creator = creator;
+	}
+
+	public String getXueqi() {
+		return xueqi;
+	}
+
+	public void setXueqi(String xueqi) {
+		this.xueqi = xueqi;
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -64,6 +97,38 @@ public class Tree {
 	}
 	public void setRealPath(String realPath) {
 		this.realPath = realPath;
+	}
+
+	public String getUserId() {
+		return userId;
+	}
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+
+	public String getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(String courseId) {
+		this.courseId = courseId;
+	}
+
+	public String getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(String createTime) {
+		this.createTime = createTime;
+	}
+
+	public String getLocked() {
+		return locked;
+	}
+
+	public void setLocked(String locked) {
+		this.locked = locked;
 	}
 	
 }

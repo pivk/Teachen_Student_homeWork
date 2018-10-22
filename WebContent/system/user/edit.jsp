@@ -52,9 +52,9 @@
 						</div>
 					</div>
 					<div class="am-g am-margin-top">
-						<div class="am-u-sm-4 am-u-md-2 am-text-right">所属机构</div>
+						<div class="am-u-sm-4 am-u-md-2 am-text-right">班级</div>
 						<div class="am-u-sm-8 am-u-md-4 am-u-end col-end">
-							<input id="unitName" name="unitName" type="text" class="am-form-field am-input-sm" placeholder="组织" maxlength="25">
+							<input id="unitName" name="unitName" type="text" class="am-form-field am-input-sm" placeholder="班级" maxlength="25">
 							<input id="unitId" name="unitId" type="hidden">
 						</div>
 					</div>

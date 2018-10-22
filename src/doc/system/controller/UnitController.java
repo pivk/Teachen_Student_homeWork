@@ -2,24 +2,31 @@ package doc.system.controller;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import doc.common.AppData;
 import doc.common.BaseController;
-import pushunsoft.common.JsonResult;
-import pushunsoft.common.PageData;
 import doc.common.annotation.LoginAnnotation;
+import doc.home.view.Menu;
 import doc.system.entity.Log;
 import doc.system.entity.Unit;
 import doc.system.entity.User;
 import doc.system.service.LogService;
 import doc.system.service.UnitService;
 import doc.system.view.UnitV;
+import pushunsoft.common.JsonResult;
+import pushunsoft.common.PageData;
 /**
  * UnitController
  * 
@@ -34,6 +41,48 @@ public class UnitController extends BaseController {
 	@Resource
 	private LogService logService;
 	SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+	
+	@LoginAnnotation
+	@RequestMapping("/selectUnitUser")
+	public String selectUnitUser(HttpServletRequest request, Model model) {
+		List<Menu> result = unitService.getListAll("") ;
+		ObjectMapper mapper = new ObjectMapper();
+		String menuJson = "[]";
+		try {
+			menuJson = mapper.writeValueAsString(result);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		model.addAttribute("unitUsers", menuJson);
+		return "public/popup/selectUnitUser";
+	}
+	/**
+	 * 选择
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/popup")
+	public String popup2(HttpServletRequest request, Model model) {
+		model.addAttribute("title", "选择组织");
+		return "public/popup/selectUnit";
+	}
+	@ResponseBody
+	@RequestMapping("/doTree")
+	public JsonResult doTree(HttpServletRequest request) {
+		// 执行操作
+		List<Menu> result = unitService.getListAll(null);
+		// 返回
+		JsonResult json = new JsonResult();
+		if (result != null) {
+			json.setState(true);
+			json.setData(result);
+		} else {
+			json.setState(false);
+			json.setMessage(unitService.getMessage());
+		}
+		return json;
+	}
 	/**
 	 * 查询
 	 * 
@@ -44,7 +93,16 @@ public class UnitController extends BaseController {
 	@LoginAnnotation
 	@RequestMapping("/page")
 	public Model page(HttpServletRequest request, Model model) {
-		String action = "查询机构";
+		String action = "查询班级";
+		List<Menu> menuList = unitService.getListAll(null);
+		ObjectMapper mapper = new ObjectMapper();
+		String menuJson = "[]";
+		try {
+			menuJson = mapper.writeValueAsString(menuList);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		model.addAttribute("units", menuJson);
 		model.addAttribute("title", action);
 		return model;
 	}
@@ -58,7 +116,7 @@ public class UnitController extends BaseController {
 	@LoginAnnotation
 	@RequestMapping("/show")
 	public Model show(HttpServletRequest request, Model model) {
-		model.addAttribute("title", "查看机构");
+		model.addAttribute("title", "查看班级");
 		// 接收数据
 		String id = request.getParameter("id");
 		// 执行操作
@@ -75,6 +133,10 @@ public class UnitController extends BaseController {
 		if (mingCheng != null && !mingCheng.isEmpty()) {
 			unit.setMingCheng(mingCheng);
 		}
+		String parentId = request.getParameter("parentId");
+		if (parentId != null && !parentId.isEmpty()) {
+			unit.setParentId(parentId);
+		}
 		PageData<UnitV> pageData = unitService.getPage(page,unit);
 		JsonResult json = new JsonResult();
 		json.setState(true);
@@ -82,7 +144,7 @@ public class UnitController extends BaseController {
 		return json;
 	}
 	/**
-	 * 导入机构
+	 * 导入班级
 	 * 
 	 * @param request
 	 * @param model
@@ -91,7 +153,7 @@ public class UnitController extends BaseController {
 	@LoginAnnotation
 	@RequestMapping("/importUnit")
 	public Model importUnit(HttpServletRequest request, Model model) {
-		model.addAttribute("title", "导入机构");
+		model.addAttribute("title", "导入班级");
 		return model;
 	}
 	@ResponseBody
@@ -108,7 +170,7 @@ public class UnitController extends BaseController {
 		return json;
 	}
 	/**
-	 * 添加机构
+	 * 添加班级
 	 * 
 	 * @param request
 	 * @param model
@@ -117,7 +179,7 @@ public class UnitController extends BaseController {
 	@LoginAnnotation
 	@RequestMapping("/add")
 	public Model add(HttpServletRequest request, Model model) {
-		model.addAttribute("title", "添加机构");
+		model.addAttribute("title", "添加班级");
 		return model;
 	}
 	@ResponseBody
@@ -146,9 +208,14 @@ public class UnitController extends BaseController {
 		if(result){
 			Log log = new Log();
 			log.setNeiRong(mingCheng);
-			log.setBiaoTi(unit.getId()+"添加机构");
-			User user1 = (User) request.getSession().getAttribute(AppData.Session_User);
-			log.setUserId(user1.getId());
+			log.setBiaoTi(unit.getId()+"添加班级");
+			/*User user1 = (User) request.getSession().getAttribute(AppData.Session_User);
+			log.setUserId(user1.getId());*/
+			HttpSession session = request.getSession(false);
+			if (session != null) {
+				String creator = ((User) session.getAttribute(AppData.Session_User)).getId();
+				log.setUserId(creator);
+			}
 			Date date2 =new Date();
 			log.setTimestamp(dateFormatter.format(date2));
 			logService.add(log);
@@ -165,7 +232,7 @@ public class UnitController extends BaseController {
 	@LoginAnnotation
 	@RequestMapping("/edit")
 	public Model edit(HttpServletRequest request, Model model) {
-		model.addAttribute("title", "修改机构");
+		model.addAttribute("title", "修改班级");
 		String id = request.getParameter("id");
 		model.addAttribute("id", id);
 		return model;
@@ -217,7 +284,7 @@ public class UnitController extends BaseController {
 		if(result){
 			Log log = new Log();
 			log.setNeiRong(mingCheng);
-			log.setBiaoTi(id+"修改机构");
+			log.setBiaoTi(id+"修改班级");
 			User user1 = (User) request.getSession().getAttribute(AppData.Session_User);
 			log.setUserId(user1.getId());
 			Date date2 =new Date();
@@ -241,7 +308,7 @@ public class UnitController extends BaseController {
 			Unit unit=new Unit();
 			Log log = new Log();
 			log.setNeiRong(unit.getMingCheng());
-			log.setBiaoTi(id+"删除机构");
+			log.setBiaoTi(id+"删除班级");
 			User user1 = (User) request.getSession().getAttribute(AppData.Session_User);
 			log.setUserId(user1.getId());
 			Date date2 =new Date();

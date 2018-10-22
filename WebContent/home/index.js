@@ -13,6 +13,10 @@ $(document).ready(function() {
 		}
 	});
 });
+function setAutoHeight(obj){
+	$(obj).height($(document.body).height()-163);
+	
+}
 function toggleMenu() {
 	var menu = $("#admin-offcanvas");
 	if (menu.is(":hidden")) {
@@ -32,7 +36,7 @@ function addTab(id, title, url) {
 			+ '<a href="javascript: void(0)"> ' + title + '</a></li>';
 	var content = '<div class="am-tab-panel">'
 			+ '<iframe id="tab_'+id+'" src="' + url
-			+ '" width="100%" height="100%"></iframe>'
+			+ '" width="100%" height="100%" onload="Javascript:setAutoHeight(this)"></iframe>'
 			+ '</div>';
 
 	$nav.append(nav);
@@ -40,6 +44,27 @@ function addTab(id, title, url) {
 	$tab.tabs('refresh');
 	tabArray.push(id);
 }
+function exist(id) {
+	for (var i = 0; i < tabArray.length; i++) {
+		if (tabArray[i] == id) {
+			return i;
+		}
+	}
+	return -1;
+}
+function closeTab(id) {
+	var tabIndex = exist(id);
+	if (tabIndex < 0) return;
+	
+	var $li = $("#l"+id);
+	var index = $nav.children('li').index($li);
+	$li.remove();
+	$bd.find('.am-tab-panel').eq(index).remove();
+	$tab.tabs('open', index > 0 ? index - 1 : index + 1);
+	$tab.tabs('refresh');
+	tabArray.splice(index,1);
+}
+
 function getTab(id){
 	for(var i=0;i<tabArray.length;i++){
 		if(tabArray[i]==id){

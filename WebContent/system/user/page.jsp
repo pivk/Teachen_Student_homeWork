@@ -27,16 +27,9 @@
 						<button id="btAdd" type="button" class="am-btn am-btn-primary">
 							<span class="am-icon-plus"></span> 新增
 						</button>
-						<button id="btExport" type="button" class="am-btn am-btn-primary"
-							style="margin-left: 5px">
-							<span class="am-icon-sign-in"></span> 导入
-						</button>
-						<button id="btAgain" type="button" class="am-btn am-btn-primary"
-							style="margin-left: 5px">
-							<span class="am-icon-sign-in"></span> 初始化
-						</button>
+					
 						 <div class="am-form-group">
-						 	<input id="unitName" name="unitName" type="text" class="am-form-field am-input-sm" placeholder="组织" maxlength="25">
+						 	<input id="unitName" name="unitName" type="text" class="am-form-field am-input-sm" placeholder="班级" maxlength="25">
 							 <input id="unitId" name="unitId" type="hidden">
 							<input id="xingMing" name="xingMing" type="text"
 								class="am-form-field am-input-sm" placeholder="姓名" maxlength="25">
@@ -59,12 +52,12 @@
 							<thead>
 								<tr>
 									<th class="table-check"style="width: 2%"><input type="checkbox" id="main" /></th>
-									<th style="width: 10%">用户名</th>
-									<th style="width: 10%">姓名</th>
-									<th style="width: 10%">手机</th>
-									<th style="width: 10%">邮箱</th>
-									<th style="width: 20%">机构</th>
-									<th class="table-set"	>操作</th>
+									<th >用户名</th>
+									<th >姓名</th>
+									<th >手机</th>
+									<th >邮箱</th>
+									<th >班级</th>
+									<th class="table-set">操作</th>
 								</tr>
 							</thead>
 							<tbody>

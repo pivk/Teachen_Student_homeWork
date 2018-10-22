@@ -43,7 +43,7 @@
 							<td>${user.email }</td>
 						</tr>
 						<tr>
-							<th>所属机构</th>
+							<th>班级</th>
 							<td>${user.unitName }</td>
 						</tr>
 					</tbody>

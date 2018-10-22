@@ -104,4 +104,6 @@ public interface UserMapper {
 	 * @return
 	 */
 	User login(Map<String, Object> params);
+	int doTeacherPageCount(Map<String, Object> params);
+	List<UserV> doTeacherPage(Map<String, Object> params);
 }

@@ -89,6 +89,15 @@ public class UserController extends BaseController {
 		return model;
 	}
 	/**
+
+	 */
+	@LoginAnnotation
+	@RequestMapping("/teacherpage")
+	public Model teacherpage(HttpServletRequest request, Model model) {
+	
+		return model;
+	}
+	/**
 	 * ²é¿´
 	 * 
 	 * @param request
@@ -139,6 +148,23 @@ public class UserController extends BaseController {
 		json.setData(pageData);
 		return json;
 	}
+	@ResponseBody
+	@RequestMapping("/doTeacherPage")
+	public JsonResult doTeacherPage(HttpServletRequest request) {
+		int page = Integer.parseInt(request.getParameter("page"));
+		UserV user = new UserV();
+		String xingMing = request.getParameter("xingMing");
+		if (xingMing != null && !xingMing.isEmpty()) {
+			user.setXingMing(xingMing);
+		}
+		
+		PageData<UserV> pageData = userService.doTeacherPage(page, user);
+		JsonResult json = new JsonResult();
+		json.setState(true);
+		json.setData(pageData);
+		return json;
+	}
+	
 	@ResponseBody
 	@RequestMapping("/doAdd")
 	public JsonResult doAdd(HttpServletRequest request) {

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="doc.information.mappper.DoorMapper">
+	<resultMap id="EntityResult" type="doc.information.entity.Door">
+		
+	</resultMap>
+	
+	<resultMap id="ViewResult" type="doc.information.view.DoorV">
+
+	</resultMap>
+	
+
+	<select id="selectCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		select count(*) as shu from doc_door where 1=1
+		<if test="biaoTi != null">
+			AND BIAOTI like #{biaoTi,jdbcType=VARCHAR}
+		</if>
+		<if test="id_not_in!= null">
+			AND ID NOT IN(${id_not_in})
+		</if>
+	</select>
+		<!-- 分页查询通知 -->
+	<select id="selectPageDoorV" parameterType="java.util.Map" resultMap="ViewResult">
+		SELECT * FROM doc_door WHERE 1=1
+		<if test="biaoTi != null">
+			AND BIAOTI like #{biaoTi,jdbcType=VARCHAR}
+		</if>
+		AND USERID=#{userId,jdbcType=VARCHAR}
+	</select>
+		<!--查询通知总数 -->
+	<select id="selectPageCount" parameterType="java.util.Map" resultType="java.lang.Integer">
+		SELECT count(*) as shu FROM doc_door WHERE 1=1 
+		<if test="biaoti != null">
+			AND BIAOTI like #{biaoti,jdbcType=VARCHAR}
+		</if>
+		AND USERID=#{userId,jdbcType=VARCHAR}
+		
+	</select>
+	<!-- 分页查询 -->
+	<select id="selectPage" parameterType="java.util.Map" resultMap="ViewResult">
+			SELECT * FROM doc_door 
+				WHERE 1=1
+				<if test="biaoti != null">
+					AND BIAOTI like #{biaoti,jdbcType=VARCHAR}
+				</if>
+		        ORDER BY CREATETIME DESC
+	     	limit #{begin}, #{end}
+	</select>
+	<select id="selectAllDoor" parameterType="java.util.Map" resultMap="ViewResult">
+				SELECT * FROM doc_door 
+				WHERE 1=1
+		        ORDER BY CREATETIME DESC
+				limit #{begin}, #{end}
+	</select>
+
+	<!-- 单个详情 -->
+	<select id="show" parameterType="java.lang.String" resultMap="ViewResult">
+		select * from doc_door N where N.ID = #{id,jdbcType=VARCHAR}
+	</select>
+	<!-- 删除 -->
+	<delete id="delete" parameterType="java.lang.String">
+		delete from doc_door
+		where ID =
+		#{id,jdbcType=VARCHAR}
+	</delete>
+	<!-- 添加 -->
+	<insert id="insert" parameterType="doc.information.entity.Door">
+		insert into doc_door
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				ID,
+			</if>
+			<if test="biaoTi != null">
+				BIAOTI,
+			</if>
+			<if test="url != null">
+				url,
+			</if>
+			<if test="nextName != null">
+				nextName,
+			</if>
+			<if test="creator != null">
+				creator,
+			</if>
+			<if test="userId != null">
+				userId,
+			</if>
+			<if test="memo != null">
+				memo,
+			</if>
+			createTime,
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id,jdbcType=VARCHAR},
+			</if>
+			<if test="biaoTi != null">
+				#{biaoTi,jdbcType=VARCHAR},
+			</if>
+			<if test="url != null">
+				#{url,jdbcType=CLOB},
+			</if>
+			<if test="nextName != null">
+				#{nextName,jdbcType=VARCHAR},
+			</if>
+			<if test="creator != null">
+				#{creator,jdbcType=VARCHAR},
+			</if>
+			<if test="userId != null">
+				#{userId,jdbcType=VARCHAR},
+			</if>
+			<if test="memo != null">
+				#{memo,jdbcType=VARCHAR},
+			</if>
+		now(),
+		</trim>
+	</insert> 
+	
+	
+	
+	
+</mapper>

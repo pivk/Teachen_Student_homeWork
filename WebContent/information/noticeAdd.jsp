@@ -49,7 +49,7 @@
 						<th>内容</th>
 						<!-- 加载编辑器的容器 -->
 						 <td rowspan="1" colspan="7">
-						 <script id="container" name="neiRong" type="text/plain"  style="width:100%;height:400px;">
+						 <script id="container" name="neiRong" type="text/plain"  style="width:100%;height:200px;">
        						
    							 </script>
    							</td>
@@ -143,7 +143,7 @@
 					area : [ '80%', '80%' ],
 					shade : 0,
 					maxmin : true,
-					content : '/system/user/popup.action',
+					content : '/system/unit/selectUnitUser.action',
 					btn : [ '确定', '关闭' ],
 					yes : function(index,layero) {
 						var iframeWin = window[layero.find('iframe')[0]['name']];

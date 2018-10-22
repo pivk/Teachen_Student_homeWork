@@ -31,12 +31,19 @@ text-align: center;
 	<div class="admin-content">
 			<div class="am-container">
 				<h1 class="jz"><%=notice.getBiaoTi()== null?"":notice.getBiaoTi()%> </h1>
-				<h5 class="ydq" ><%=notice.getCreateTime()== null?"":notice.getCreateTime().substring(0,16)%></h5>
+				<h5 class="ydq" ><%=notice.getCreateTime()== null?"":notice.getCreateTime().substring(0,10)%></h5>
 			</div>
 			<div class="am-container">
 				<p class="am-u-sm-17 am-u-sm-centered">
 				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<%=notice.getNeiRong()== null?"":notice.getNeiRong()%>
 				</p>
+			
+			</div>
+			<div class="am-container">
+				<p class="am-u-sm-17 am-u-sm-centered">
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span><a   href="/file/down.action?realPath=<%=notice.getFuJian()== null?"":notice.getFuJian()%>&fileName=<%=notice.getFuJianName()== null?"":notice.getFuJianName()%>"><%=notice.getFuJianName()== null?"":notice.getFuJianName()%>下载</a></span>
+				</p>
+			
 			
 			</div>
 					<div class="am-container ydq">

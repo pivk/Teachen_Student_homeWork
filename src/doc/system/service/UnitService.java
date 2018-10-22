@@ -1,18 +1,24 @@
 package doc.system.service;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.annotation.Resource;
+
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.stereotype.Service;
 
 import doc.common.AppData;
 import doc.common.BaseService;
-import pushunsoft.common.PageData;
+import doc.home.view.Menu;
 import doc.system.entity.Unit;
 import doc.system.mapper.UnitMapper;
 import doc.system.view.ImportUnit;
 import doc.system.view.UnitV;
+import doc.system.view.UserV;
+import pushunsoft.common.PageData;
 import pushunsoft.database.MyBatis;
 /**
  * 机构业务类
@@ -22,6 +28,106 @@ import pushunsoft.database.MyBatis;
  */
 @Service
 public class UnitService extends BaseService {
+	@Resource
+	private UserService userService;
+	
+	/**
+	 * 获取部门列表
+	 * 
+	 * @param v
+	 * @return
+	 */
+	public List<Menu> getListAll(String str) {
+		// 查询前准备
+		Map<String, Object> params = new HashMap<String, Object>();
+		// 开始查询数据库
+		List<UnitV> list = null;
+		MyBatis database = getDatabase();
+		SqlSession session = database.openSession();
+		try {
+			UnitMapper mapper = session.getMapper(UnitMapper.class);
+			list = mapper.selectAll(params);
+		} catch (Exception ex) {
+			this.setMessage("操作失败");
+		} finally {
+			database.closeSession();
+		}
+		if (list == null || list.size() == 0)
+			return null;
+
+		List<Menu> menuList = new ArrayList<Menu>();
+		for (UnitV unit : list) {
+			if (!unit.getParentId().equals("0"))
+				continue;
+			Menu menu = new Menu();
+			menu.setId(unit.getId());
+			menu.setText(unit.getMingCheng());
+			menuList.add(menu);
+			if(str == null) CreateMenu(list, menu);
+			else CreateUserMenu(list, menu);
+			
+		}
+		// 返回处理
+		return menuList;
+
+	}
+	/**
+	 * 创建组织菜单
+	 * 
+	 * @param powerList
+	 * @param menu
+	 */
+	private void CreateMenu(List<UnitV> unitList, Menu menu) {
+		for (Unit unit : unitList) {
+			if (unit.getParentId() != null && unit.getParentId().equals(menu.getId())) {
+				if (menu.getNodes() == null) {
+					menu.setNodes(new ArrayList<Menu>());
+				}
+				Menu subMenu = new Menu();
+				subMenu.setId(unit.getId());
+				subMenu.setText(unit.getMingCheng());
+				menu.getNodes().add(subMenu);
+				CreateMenu(unitList, subMenu);
+			}
+		}
+	}
+	/**
+	 * 创建组织人员菜单
+	 * 
+	 * @param powerList
+	 * @param menu
+	 */
+	private void CreateUserMenu(List<UnitV> unitList, Menu menu) {
+		UserV u = new UserV();
+		u.setUnitId(menu.getId());
+		List<UserV> userList = userService.getList(u);
+		if(userList != null && userList.size()>0){
+			if (menu.getNodes() == null) {
+				menu.setNodes(new ArrayList<Menu>());
+			}
+			for(UserV uv : userList ){
+				Menu subUserMenu = new Menu();
+				subUserMenu.setId(uv.getId());
+				subUserMenu.setText(uv.getXingMing());
+				subUserMenu.setFlag(true);
+				subUserMenu.setUnitName(uv.getUnitName());
+				menu.getNodes().add(subUserMenu);
+			}
+		}
+		for (Unit unit : unitList) {
+			if (unit.getParentId() != null && unit.getParentId().equals(menu.getId())) {
+				if (menu.getNodes() == null) {
+					menu.setNodes(new ArrayList<Menu>());
+				}
+				Menu subMenu = new Menu();
+				subMenu.setId(unit.getId());
+				subMenu.setText(unit.getMingCheng());
+				menu.getNodes().add(subMenu);
+				CreateUserMenu(unitList, subMenu);
+			}
+		}
+	}
+	
 	/**
 	 * 生成ID
 	 * 
@@ -67,6 +173,9 @@ public class UnitService extends BaseService {
 			if (v.getMingCheng() != null && !"".equals(v.getMingCheng())) {
 				params.put("mingCheng", "%" + v.getMingCheng().trim() + "%");
 			}
+			if (v.getParentId() != null && !"".equals(v.getParentId())) {
+				params.put("parentId",  v.getParentId().trim() );
+			}
 		}
 		// 开始查询数据库
 		PageData<UnitV> pageData = new PageData<UnitV>();
@@ -98,7 +207,7 @@ public class UnitService extends BaseService {
 		SqlSession session = database.openSession();
 		try {
 			UnitMapper mapper = session.getMapper(UnitMapper.class);
-			unit = mapper.get(id);
+			unit = mapper.show(id);
 		} catch (Exception ex) {
 			this.setMessage("操作失败");
 		} finally {

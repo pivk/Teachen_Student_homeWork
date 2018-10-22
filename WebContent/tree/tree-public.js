@@ -27,6 +27,7 @@ function loadData(newpage,url) {
 	$.get(url,{
 		page : page,
 		parentId:$("#parentId").val(),
+		xueqi:$("#xueqi").val(),
 		mingCheng:$("#mingCheng").val(),
 	},function(response, status) {
 		showPage(response.data.data.total);
@@ -46,12 +47,14 @@ function loadData(newpage,url) {
 			var dataLei=$(this).attr("data-lei");
 			show(dataId,dataLei);
 		});
+		
+		
 	    $.contextMenu({
 	        selector: '.am-thumbnail-item', 
 	        callback: function(key, options) {
 	            var m = "clicked: " + key;
 	            var len=$(".ui-selected").length;
-	            alert(m+":"+len); 
+	         
 	        },
 	        items: {
 	            "edit": {name: "编辑", icon: "edit"},
@@ -88,14 +91,14 @@ function showFile(id){
  * 创建目录
  * @returns
  */
-function createDirectory(parentId){
+function createDirectory(parentId,xueqi){
 	layer.open({
 		type : 2,
 		title: false,
-		area : [ '600px', '300px' ],
+		area : [ '90%', '90%' ],
 		shade : 0,
 		maxmin : true,
-		content : '/directory/add.action?parentId='+parentId,
+		content : '/directory/add.action?parentId='+parentId+'&xueqi='+xueqi,
 		zIndex : layer.zIndex,
 		success : function(layero) {
 			layer.setTop(layero);

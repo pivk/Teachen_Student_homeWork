@@ -15,7 +15,9 @@ import doc.common.AppData;
 import doc.common.BaseController;
 import doc.common.annotation.LoginAnnotation;
 import doc.information.entity.Notice;
+import doc.information.service.DoorService;
 import doc.information.service.NoticeService;
+import doc.information.view.DoorV;
 import doc.information.view.NoticeV;
 import doc.system.entity.User;
 import doc.system.service.UnitService;
@@ -37,6 +39,8 @@ public class NewsController extends BaseController {
 
 	@Resource
 	NoticeService noticeService;
+	@Resource
+	DoorService doorService;
 
 
 	@Resource
@@ -50,7 +54,7 @@ public class NewsController extends BaseController {
 	 * @param model
 	 * @return
 	 */
-	@LoginAnnotation
+	
 	@RequestMapping("/noticeAdminPage")
 	public Model noticeAdminPage(HttpServletRequest request, Model model) {
 
@@ -67,7 +71,7 @@ public class NewsController extends BaseController {
 	 * @param model
 	 * @return
 	 */
-	@LoginAnnotation
+	
 	@RequestMapping("/noticePage")
 	public Model noticePage(HttpServletRequest request, Model model) {
 
@@ -148,7 +152,6 @@ public class NewsController extends BaseController {
 	}
 
 	/**
-	 * 分页查询与用户关�?
 	 * 
 	 * @param request
 	 *            <table>
@@ -198,7 +201,7 @@ public class NewsController extends BaseController {
 	 * @param model
 	 * @return
 	 */
-	@LoginAnnotation
+	
 	@RequestMapping("/noticeEdit")
 	public Model noticeEdit(HttpServletRequest request, Model model) {
 		model.addAttribute("title", "修改通知");
@@ -275,7 +278,7 @@ public class NewsController extends BaseController {
 	 * @param model
 	 * @return
 	 */
-	@LoginAnnotation
+	
 	@RequestMapping("/noticeAdd")
 	public Model noticeAdd(HttpServletRequest request, Model model) {
 		model.addAttribute("title", "新增通知");
@@ -354,7 +357,7 @@ public class NewsController extends BaseController {
 	 * @param model
 	 * @return
 	 */
-	@LoginAnnotation
+	
 	@RequestMapping("/noticeShow")
 	public Model noticeShow(HttpServletRequest request, Model model) {
 		model.addAttribute("title", "查看通知");
@@ -363,6 +366,11 @@ public class NewsController extends BaseController {
 		notivev.setNoticeId(id);
 		String du = "已读";
 		notivev.setDu(du);
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			String creator = ((User) session.getAttribute(AppData.Session_User)).getXingMing();
+			notivev.setCreator(creator);
+		}
 		noticeService.updeatDate(notivev);
 		Notice notice = noticeService.show(id);
 		model.addAttribute("notice", notice);
@@ -438,6 +446,41 @@ public class NewsController extends BaseController {
 		JsonResult json = new JsonResult();
 		json.setState(result);
 		json.setMessage(noticeService.getMessage());
+		return json;
+	}
+	/**
+	 * 
+	 * @param request
+	 *            <table>
+	 *            <tr>
+	 *            <td>page</td>
+	 *            <td>页码，从1�?�?</td>
+	 *            </tr>
+	 *            <tr>
+	 *            <td>xingMing</td>
+	 *            <td>姓名</td>
+	 *            </tr>
+	 *            </table>
+	 * @return JsonResult，data格式参�?? {@link oa.meeting.entity.News
+	 *         oa.meeting.entity.News}
+	 */
+	@ResponseBody
+	@RequestMapping("/doDoorPage")
+	public JsonResult doDoorPage(HttpServletRequest request) {
+		DoorV door = new DoorV();
+		String biaoti = request.getParameter("biaoti");
+		if (biaoti != null && !biaoti.isEmpty()) {
+			door.setBiaoTi(biaoti);
+		}
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			String creator = ((User) session.getAttribute(AppData.Session_User)).getId();
+			door.setUserId(creator);
+		}
+		PageData<DoorV> pageData = doorService.getDoorVPage( door);
+		JsonResult json = new JsonResult();
+		json.setState(true);
+		json.setData(pageData);
 		return json;
 	}
 

@@ -21,8 +21,8 @@
 			</div>
 			<hr>
 			<div class="am-cf am-padding">
-				青岛普顺信息技术有限公司<br> http://www.pushunsoft.com<br>
-				QQ:1003619103<br> Email:company@pushunsoft.com<br>
+				作者：郝振<br>
+				QQ:1207119946<br> Email:13012410350@163.com<br>
 			</div>
 		</div>
 	</div>

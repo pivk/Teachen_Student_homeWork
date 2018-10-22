@@ -10,7 +10,6 @@ function load(newpage,text,parentId){
 		jQuery.each(response.data.data, function(key, val) {
 			var row = "<tr>"
 				+ "<td>"+ (val.mingCheng==null?"":val.mingCheng) + "</td>"
-				+ "<td>"+ (val.code==null?"":val.code)+ "</td>"
 				+ "<td>"+ (val.parentName==null?"":val.parentName) + "</td>"
 				+"<td>"
 				+"<button type=\"button\" onclick=\"Edit('"+val.id+"')\" class=\"am-btn am-btn-default am-btn-xs am-text-secondary\">编辑</button>&nbsp;"

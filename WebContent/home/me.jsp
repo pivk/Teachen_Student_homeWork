@@ -51,10 +51,10 @@
 					</div>
 				</div>
 				<div class="am-g am-margin-top">
-					<div class="am-u-sm-4 am-u-md-2 am-text-right">所属机构</div>
+					<div class="am-u-sm-4 am-u-md-2 am-text-right">所属班级</div>
 					<div class="am-u-sm-8 am-u-md-4 am-u-end col-end">
-						<select id="unitId" name="unitId" class="am-input-sm"></select>
-					</div>
+<input id="unitName" name="unitName" type="text" class="am-form-field am-input-sm" placeholder="组织" maxlength="25">
+							 <input id="unitId" name="unitId" type="hidden">					</div>
 				</div>
 				<div style="height: 50px"></div>
 				<div class="am-form-group">
@@ -81,6 +81,8 @@
 	<script src="/js/amazeui/js/app.js"></script>
 	<script src="/js/app.js"></script>
 	<script src="/js/api.js"></script>
+				<script src="/js/layer/layer.js"></script>
+	
 	<script src="/home/me.js"></script>
 </body>
 </html>

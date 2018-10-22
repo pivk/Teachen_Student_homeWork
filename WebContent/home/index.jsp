@@ -19,8 +19,8 @@
 		<header class="am-topbar am-topbar-inverse admin-header">
 			<div class="am-topbar-brand">
 				<div class="am-show-md-up">
-					<img src="/images/logo.jpg"
-						style="height: 55px; margin-top: -10px; margin-left: -10px">
+					<img src="/images/logo-mini.png"
+						style="height: 60px; margin-top: -10px; margin-left: -10px">
 					<strong>${appName}</strong>
 				</div>
 				<div class="am-show-md-down am-hide-md-up">
@@ -77,7 +77,7 @@
 					<div class="am-tabs-bd">
 						<div class="am-tab-panel am-active">
 							<iframe id="tab_welcome" src="/home/welcome.action" width="100%"
-								height="100%"></iframe>
+								onload="Javascript:setAutoHeight(this)"></iframe>
 						</div>
 					</div>
 				</div>
@@ -91,7 +91,7 @@
 	<script src="/js/amazeui/js/app.js"></script>
 	<script>
 		var tongyongMenu = {
-			text : "通用",
+			text : "系统中心",
 			nodes : [ {
 				id : "index",
 				text : "首页",

@@ -59,6 +59,7 @@ $(document).ready(function() {
     $("#roleId").change(function () {
         getPower();
     });	
+    
 	$('#tree').treeview({
 		data : myMenu,
 		uiLibrary : 'bootstrap',

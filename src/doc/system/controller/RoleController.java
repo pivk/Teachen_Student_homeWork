@@ -2,26 +2,31 @@ package doc.system.controller;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import doc.common.AppData;
 import doc.common.BaseController;
-import pushunsoft.common.JsonResult;
-import pushunsoft.common.PageData;
 import doc.common.annotation.LoginAnnotation;
+import doc.home.view.Menu;
 import doc.system.entity.Log;
 import doc.system.entity.Role;
 import doc.system.entity.User;
 import doc.system.service.LogService;
 import doc.system.service.PowerService;
 import doc.system.service.RoleService;
-import doc.system.view.PowerTree;
 import doc.system.view.RoleV;
+import pushunsoft.common.JsonResult;
+import pushunsoft.common.PageData;
 /**
  * LogController
  * 
@@ -109,10 +114,18 @@ public class RoleController extends BaseController {
 	public Model power(HttpServletRequest request, Model model) {
 		model.addAttribute("title", "角色权限");
 		// 接收数据
+		// 接收数据
 		String id = request.getParameter("id");
 		model.addAttribute("id", id);
-		PowerTree tree=powerService.getTree2();
-		model.addAttribute("tree", tree);
+		List<Menu> menuList=powerService.MakeMenu();
+		ObjectMapper mapper = new ObjectMapper();
+		String menuJson = "[]";
+		try {
+			menuJson = mapper.writeValueAsString(menuList);
+		} catch (JsonProcessingException e) {
+			e.printStackTrace();
+		}
+		model.addAttribute("tree", menuJson);
 		return model;
 	}
 	/**

@@ -13,14 +13,16 @@ import org.springframework.stereotype.Service;
 
 import doc.common.AppData;
 import doc.common.BaseService;
+import doc.information.entity.Door;
 import doc.information.entity.Notice;
+import doc.information.mappper.DoorMapper;
 import doc.information.mappper.NoticeMapper;
 import doc.information.view.NoticeV;
 import pushunsoft.common.PageData;
 import pushunsoft.database.MyBatis;
 
 /**
- * 通知业务�?
+ * 通知业务�?
  * 
  * @author jerry
  *
@@ -36,13 +38,13 @@ public class NoticeService extends BaseService {
 	 * 分页查询
 	 * 
 	 * @param page
-	 *            页码�?1�?�?
+	 *            页码�?1�?�?
 	 * @param v
 	 *            查询条件
 	 * @return
 	 */
 	public PageData<Notice> getNoticePage(Integer page, Notice n) {
-		// 查询前准�?
+		// 查询前准�?
 		Map<String, Object> params = new HashMap<String, Object>();
 		if (page == null) {
 			page = 1;
@@ -55,7 +57,7 @@ public class NoticeService extends BaseService {
 				params.put("biaoti", "%"+n.getBiaoTi()+"%");
 			}
 		}
-		// 数据库执�?
+		// 数据库执�?
 		PageData<Notice> pageData = new PageData<Notice>();
 		pageData.setPageSize(this.getPageSize());
 		MyBatis database = getDatabase();
@@ -80,13 +82,13 @@ public class NoticeService extends BaseService {
 	 * 分页查询通知关联user
 	 * 
 	 * @param page
-	 *            页码�?1�?�?
+	 *            页码�?1�?�?
 	 * @param v
 	 *            查询条件
 	 * @return
 	 */
 	public PageData<NoticeV> getNoticeVPage(Integer page, NoticeV n) {
-		// 查询前准�?
+		// 查询前准�?
 		Map<String, Object> params = new HashMap<String, Object>();
 		if (page == null) {
 			page = 1;
@@ -102,7 +104,7 @@ public class NoticeService extends BaseService {
 				params.put("biaoTi", "%"+n.getBiaoTi()+"%");
 			}
 		}
-		// 数据库执�?
+		// 数据库执�?
 		PageData<NoticeV> pageData = new PageData<NoticeV>();
 		pageData.setPageSize(this.getPageSize());
 		MyBatis database = getDatabase();
@@ -121,7 +123,7 @@ public class NoticeService extends BaseService {
 	}
 	
 	public List<NoticeV> getNoticeVPageFour(Integer page, NoticeV n) {
-		// 查询前准�?
+		// 查询前准�?
 		Map<String, Object> params = new HashMap<String, Object>();
 		if (page == null) {
 			page = 1;
@@ -137,7 +139,7 @@ public class NoticeService extends BaseService {
 				params.put("biaoTi", "%"+n.getBiaoTi()+"%");
 			}
 		}
-		// 数据库执�?
+		// 数据库执�?
 		List<NoticeV> noticeList = new ArrayList<NoticeV>();
 		MyBatis database = getDatabase();
 		SqlSession session = database.openSession();
@@ -157,13 +159,13 @@ public class NoticeService extends BaseService {
 	 * 分页查询
 	 * 
 	 * @param page
-	 *            页码�?1�?�?
+	 *            页码�?1�?�?
 	 * @param v
 	 *            查询条件
 	 * @return
 	 */
 	public List<Notice> getNoticeAll(Integer page, Notice n) {
-		// 查询前准�?
+		// 查询前准�?
 		Map<String, Object> params = new HashMap<String, Object>();
 		if (page == null) {
 			page = 1;
@@ -171,7 +173,7 @@ public class NoticeService extends BaseService {
 		int begin = (page - 1) * this.getPageSize();
 		params.put("begin", begin);
 		params.put("end", begin + 9);
-		// 数据库执�?
+		// 数据库执�?
 		List<Notice> noticeList = new ArrayList<Notice>();
 		MyBatis database = getDatabase();
 		SqlSession session = database.openSession();
@@ -188,7 +190,7 @@ public class NoticeService extends BaseService {
 	}
 
 	/**
-	 * 获取�?个�?�知基本信息
+	 * 获取�?个�?�知基本信息
 	 * 
 	 * @param id
 	 * @return
@@ -198,7 +200,7 @@ public class NoticeService extends BaseService {
 			this.setMessage("越权查询");
 			return null;
 		}
-		// �?始查�?
+		// �?始查�?
 		Notice notice = null;
 		MyBatis database = getDatabase();
 		SqlSession session = database.openSession();
@@ -230,7 +232,7 @@ public class NoticeService extends BaseService {
 //			return false;
 //		}
 		boolean result = false;
-		// 数据库执�?
+		// 数据库执�?
 		MyBatis database = getDatabase();
 		SqlSession session = database.openSession();
 		try {
@@ -274,23 +276,41 @@ public class NoticeService extends BaseService {
 		boolean result = false;
 		boolean resultUser = false;
 		String userId = null;
-		// �?始执行数据库
+		// �?始执行数据库
 		MyBatis database = getDatabase();
 		SqlSession session = database.openSession();
 		try {
 			NoticeMapper mapper = session.getMapper(NoticeMapper.class);
 			result = mapper.insert(notice);
+			DoorMapper doorMapper = session.getMapper(DoorMapper.class);
+			Door door=new Door();
+            door.setBiaoTi(notice.getBiaoTi());
+            door.setNextName("查看");
+            door.setMemo("消息通知");
+            door.setUrl("/information/noticeHtml.action?id="+notice.getId());
 			if (notice.getUserId() != null) {
 				userId = notice.getUserId();
 				String uIds = notice.getUserId().substring(0, notice.getUserId().length() - 1);
 				String[] uId = uIds.split(";");
 				for (int i = 0; i < uId.length; i++) {
 					notice.setUserId(uId[i]);
+					door.setId(notice.getId()+uId[i]);
+					door.setUserId(uId[i]);
 					resultUser  = mapper.insertNotice(notice);
+					resultUser=doorMapper.insert(door);
 				}
 			}
 		
+			if (result) {
+				// 成功入库
+				session.commit();
+			}else{
+				session.rollback();
+				this.setMessage("操作失败");
+				result = false;
+			}
 		} catch (Exception ex) {
+			System.out.println(ex);
 			session.rollback();
 			this.setMessage("操作失败");
 			result = false;
@@ -314,13 +334,13 @@ public class NoticeService extends BaseService {
 			return false;
 		}
 		boolean result = false;
-		// 数据库执�?
 		MyBatis database = getDatabase();
 		SqlSession session = database.openSession();
 		try {
 			NoticeMapper mapper = session.getMapper(NoticeMapper.class);
 			result = mapper.updateNotiveV(noticev);
-			if (result) {
+			DoorMapper doorMapper = session.getMapper(DoorMapper.class);
+			result = doorMapper.delete(noticev.getId()+noticev.getCreator());			if (result) {
 				// 成功入库
 				session.commit();
 			}else{
@@ -340,7 +360,6 @@ public class NoticeService extends BaseService {
 	}
 	
 	/**
-	 * 获取�?个新闻全部信�?
 	 * 
 	 * @param id
 	 * @return
@@ -382,7 +401,7 @@ public class NoticeService extends BaseService {
 			return false;
 		}
 		boolean result = false;
-		// 数据库执�?
+		// 数据库执�?
 		MyBatis database = getDatabase();
 		SqlSession session = database.openSession();
 		try {

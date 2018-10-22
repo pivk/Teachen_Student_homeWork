@@ -3,11 +3,12 @@ package doc.file.mapper;
 import java.util.List;
 import java.util.Map;
 
+import doc.file.entity.Directory;
 import doc.file.entity.Tree;
 import doc.file.view.TreeV;
 
 /**
- * ÎÄµµ
+ * ï¿½Äµï¿½
  * 
  * @author jerry
  *
@@ -63,4 +64,14 @@ public interface TreeMapper {
 	 * @return
 	 */
 	boolean delete(String id);
+
+
+	boolean insertTree(Directory entity);
+
+	
+	List<Directory> selectAll();
+
+	List<TreeV> selectStudentPage(Map<String, Object> params);
+
+	int selectStudentCount(Map<String, Object> params);
 }

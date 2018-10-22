@@ -24,7 +24,7 @@ var editor = UE.getEditor('container',{
         //关闭elementPath  
         elementPathEnabled:false,  
         //默认的编辑区域高度  
-        initialFrameHeight:300  
+        initialFrameHeight:300
         //更多其他参数，请参考ueditor.config.js中的配置项  
     }); 
 }

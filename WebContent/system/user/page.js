@@ -15,7 +15,7 @@ function load(newpage){
 				+ "<td>"+ (val.xingMing==null?"":val.xingMing) + "</td>"
 				+ "<td>"+ (val.mobile==null?"":val.mobile) + "</td>"
 				+ "<td>"+ (val.email==null?"":val.email) + "</td>"
-				+ "<td>"+ (val.pathName==null?"":val.pathName) + "</td>"
+				+ "<td>"+ (val.unitName==null?"":val.unitName) + "</td>"
 				+"<td><button type=\"button\" onclick=\"ResetPassword('"+val.id+"')\" class=\"am-btn am-btn-default am-btn-xs\">重置密码</button>&nbsp;"
 				+"<button type=\"button\" onclick=\"Edit('"+val.id+"')\" class=\"am-btn am-btn-default am-btn-xs am-text-secondary\">编辑</button>&nbsp;"
 				+"<button type=\"button\" onclick=\"Show('"+val.id+"')\" class=\"am-btn am-btn-default am-btn-xs am-text-primary\">查看</button>&nbsp;"

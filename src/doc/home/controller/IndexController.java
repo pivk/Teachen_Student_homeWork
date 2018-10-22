@@ -50,7 +50,7 @@ public class IndexController extends BaseController {
 	@LoginAnnotation
 	@RequestMapping("/index")
 	public Model index(HttpServletRequest request, Model model) {
-		model.addAttribute("title", "ï¿½ï¿½Ò³");
+		model.addAttribute("title", "Ê×Ò³");
 		User user = (User) request.getSession().getAttribute(AppData.Session_User);
 		if (user != null) {
 			model.addAttribute("userName", user.getXingMing());
@@ -68,7 +68,7 @@ public class IndexController extends BaseController {
 	@LoginAnnotation
 	@RequestMapping("/welcome")
 	public Model welcome(HttpServletRequest request, Model model) {
-		model.addAttribute("title", "ï¿½ï¿½Ó­");
+		model.addAttribute("title", "»¶Ó­");
 		return model;
 	}
 
@@ -112,7 +112,7 @@ public class IndexController extends BaseController {
 	@LoginAnnotation
 	@RequestMapping("/password")
 	public Model password(HttpServletRequest request, Model model) {
-		model.addAttribute("title", "ï¿½Þ¸ï¿½ï¿½ï¿½ï¿½ï¿½");
+		model.addAttribute("title", "ÐÞ¸ÄÃÜÂë");
 		return model;
 	}
 
@@ -126,7 +126,7 @@ public class IndexController extends BaseController {
 	@LoginAnnotation
 	@RequestMapping("/me")
 	public Model me(HttpServletRequest request, Model model) {
-		model.addAttribute("title", "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½");
+		model.addAttribute("title", "¸öÈË×ÊÁÏ");
 		return model;
 	}
 
@@ -140,7 +140,7 @@ public class IndexController extends BaseController {
 	@LoginAnnotation
 	@RequestMapping("/help")
 	public Model help(HttpServletRequest request, Model model) {
-		model.addAttribute("title", "ï¿½ï¿½ï¿½ï¿½");
+		model.addAttribute("title", "°ïÖú");
 		return model;
 	}
 
@@ -153,7 +153,7 @@ public class IndexController extends BaseController {
 	 */
 	@RequestMapping("/error")
 	public Model error(HttpServletRequest request, Model model) {
-		model.addAttribute("title", "ï¿½ï¿½ï¿½ï¿½");
+		model.addAttribute("title", "´íÎóÒ³Ãæ¡¤");
 		return model;
 	}
 
@@ -224,9 +224,7 @@ public class IndexController extends BaseController {
 		}
 		user.setId(id);
 		user.setMima(newMiMa);
-		// Ö´ï¿½Ð²ï¿½ï¿½ï¿½
 		boolean result = homeService.editMima(user);
-		// ï¿½ï¿½ï¿½ï¿½
 		JsonResult json = new JsonResult();
 		json.setState(result);
 		json.setMessage(homeService.getMessage());
@@ -243,7 +241,7 @@ public class IndexController extends BaseController {
 	@LoginAnnotation
 	@RequestMapping("/edit")
 	public Model edit(HttpServletRequest request, Model model) {
-		model.addAttribute("title", "ï¿½Þ¸ï¿½ï¿½Ã»ï¿½");
+		model.addAttribute("title", "ÐÞ¸Ä¸öÈË×ÊÁÏ");
 		String id = request.getParameter("id");
 		model.addAttribute("id", id);
 		return model;

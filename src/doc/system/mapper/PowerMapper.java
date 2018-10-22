@@ -22,4 +22,6 @@ public interface PowerMapper {
 	boolean insertRolePower(RolePower entity);
 	boolean deleteRolePower(String roleId);
 	List<PowerV> selectUserPower(String userId);
+	
+	List<PowerV> selectOffice(String userId);
 }

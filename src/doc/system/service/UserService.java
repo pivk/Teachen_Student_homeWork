@@ -24,6 +24,35 @@ import pushunsoft.database.MyBatis;
 @Service
 public class UserService extends BaseService {
 	/**
+	 * 获取用户列表
+	 * @param v
+	 * @return
+	 */
+	public List<UserV> getList(UserV v) {
+		// 查询前准备
+		Map<String, Object> params = new HashMap<String, Object>();
+		if (v != null) {
+			if (v.getUnitId() != null && !"".equals(v.getUnitId())) {
+				params.put("unitId", v.getUnitId().trim());
+			}
+		}
+		// 开始查询数据库
+		List<UserV> list= null;
+		MyBatis database = getDatabase();
+		SqlSession session = database.openSession();
+		try {
+			UserMapper mapper = session.getMapper(UserMapper.class);
+			list=mapper.selectAll(params);
+		} catch (Exception ex) {
+			this.setMessage("操作失败");
+		} finally {
+			database.closeSession();
+		}
+		// 返回处理
+		return list;
+	}
+	
+	/**
 	 * 分页查询
 	 * 
 	 * @param page
@@ -81,6 +110,48 @@ public class UserService extends BaseService {
 		return pageData;
 	}
 	/**
+	 * 分页查询
+	 * 
+	 * @param page
+	 *            页码，从1开始
+	 * @param v
+	 *            查询 条件
+	 * @return
+	 */
+	public PageData<UserV> doTeacherPage(Integer page, UserV v) {
+		// 查询前准备
+		Map<String, Object> params = new HashMap<String, Object>();
+		if (page == null) {
+			page = 1;
+		}
+		int begin = (page - 1) * this.getPageSize();
+		params.put("begin", begin);
+		params.put("PageSize", this.getPageSize());
+		if (v != null) {
+			if (v.getUnitId() != null && !"".equals(v.getUnitId())) {
+				params.put("unitId", v.getUnitId());
+			}
+		
+		}
+	
+		// 开始查询数据库
+		PageData<UserV> pageData = new PageData<UserV>();
+		pageData.setPageSize(this.getPageSize());
+		MyBatis database = getDatabase();
+		SqlSession session = database.openSession();
+		try {
+			UserMapper mapper = session.getMapper(UserMapper.class);
+			pageData.setTotal(mapper.doTeacherPageCount(params));
+			pageData.setData(mapper.doTeacherPage(params));
+		} catch (Exception ex) {
+			this.setMessage("操作失败");
+		} finally {
+			database.closeSession();
+		}
+		// 返回处理
+		return pageData;
+	}
+	/**
 	 * 获取一个
 	 * 
 	 * @param id
@@ -97,7 +168,7 @@ public class UserService extends BaseService {
 		SqlSession session = database.openSession();
 		try {
 			UserMapper mapper = session.getMapper(UserMapper.class);
-			user = mapper.get(id);
+			user = mapper.show(id);
 		} catch (Exception ex) {
 			this.setMessage("操作失败");
 		} finally {

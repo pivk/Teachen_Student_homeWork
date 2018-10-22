@@ -3,18 +3,20 @@ package doc.system.service;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.OutputFormat;
 import org.dom4j.io.SAXReader;
 import org.dom4j.io.XMLWriter;
 import org.springframework.stereotype.Service;
+
 import doc.common.AppData;
 import doc.common.BaseService;
 import doc.system.entity.Config;
 
 /**
- * ����ҵ����
+ * 参数业务类
  * 
  * @author jerry
  *
@@ -22,58 +24,61 @@ import doc.system.entity.Config;
 @Service
 public class ConfigService extends BaseService {
 	/**
-	 * ��ȡ����
+	 * 获取参数
 	 * 
 	 * @return
 	 */
 	public Config get() {
 		Config config = new Config();
 		try {
-			// 1.����SAXReader
+			// 1.创建SAXReader
 			SAXReader reader = new SAXReader();
-			// 2.ʹ��SAXReader��ȡҪ������XML�ĵ�
+			// 2.使用SAXReader读取要解析的XML文档
 			String xmlpath = this.getClass().getClassLoader().getResource("/").getPath().toString();
 			Document doc = reader.read(new FileInputStream(xmlpath + "config.xml"));
-			// 3.Document�����ʾ�ľ��Ǹ�XML�ĵ���Document�����Ȼ�ȡ��Ԫ��
+			// 3.Document对象表示的就是该XML文档从Document中首先获取根元素
 			Element root = doc.getRootElement();
-			// 4.�Ӹ�Ԫ���а���XML�Ĳ㼶�ṹ�𼶻�ȡ��Ԫ��
-
-			// ��ȡuploadPath(�ϴ��ļ������ַ)
-			String uploadPath = root.element("UploadPath").getText();
-			config.setUploadPath(uploadPath);
+			// 4.从根元素中按照XML的层级结构逐级获取子元素
+			config.setUploadPath(root.element("UploadPath").getText());
+			config.setFilePath(root.element("FilePath").getText());
+		
 		} catch (Exception ex) {
-			this.setMessage("读取异常");
+			this.setMessage("读取失败");
 		}
 		return config;
 	}
 
 	/**
-	 * ���ò���
+	 * 设置参数
 	 * 
 	 * @param config
 	 * @throws IOException
 	 */
 	public boolean set(Config config) {
 		if (config == null) {
-			this.setMessage("参数为空");
+			this.setMessage("写入失败");
 			return false;
 		}
 		XMLWriter writer = null;
 		try {
-			// 1.����SAXReader
+			// 1.创建SAXReader
 			SAXReader reader = new SAXReader();
-			// 2.ʹ��SAXReader��ȡҪ������XML�ĵ�
+			// 2.使用SAXReader读取要解析的XML文档
 			String xmlpath = this.getClass().getClassLoader().getResource("/").getPath().toString();
 			Document doc = reader.read(new FileInputStream(xmlpath + "config.xml"));
-			// 3.Document
+			// 3.Document对象表示的就是该XML文档从Document中首先获取根元素
 			Element root = doc.getRootElement();
-			// дuploadPath(�ϴ��ļ������ַ)
+			// 写uploadPath(上传文件保存地址)
 			root.element("UploadPath").setText(config.getUploadPath());
-			AppData.App_UploadPath = config.getUploadPath();
+			root.element("FilePath").setText(config.getFilePath());
+	
 			writer = new XMLWriter(new FileOutputStream(xmlpath + "config.xml"), OutputFormat.createPrettyPrint());
 			writer.write(doc);
+			AppData.Config.setUploadPath(config.getUploadPath());
+			AppData.Config.setFilePath(config.getFilePath());
+		
 		} catch (Exception ex) {
-			this.setMessage("保存异常");
+			this.setMessage("写入失败");
 			return false;
 		} finally {
 			try {
@@ -82,22 +87,6 @@ public class ConfigService extends BaseService {
 				e.printStackTrace();
 			}
 		}
-		return true;
-	}
-
-	/**
-	 * ��ʼ������
-	 * 
-	 * @param config
-	 * @return
-	 */
-	public boolean init() {
-		Config config = get();
-		if (config == null) {
-			this.setMessage("配置文件为空");
-			return false;
-		}
-		AppData.App_UploadPath = config.getUploadPath();
 		return true;
 	}
 }
